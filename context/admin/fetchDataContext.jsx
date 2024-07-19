@@ -17,6 +17,7 @@ export const  FetchDataProvider = ({ children }) => {
   const [parents,setParents]=useState([])
   const [students,setStudents]=useState([]);
   const [teachers,setTeachers]=useState([]);
+  console.log('zakamo1',teachers);
   const [classes,setClasses]=useState([])
   const [invoices,setInvoices]=useState({})
   const [analytics,setAnalytics]=useState({})
@@ -145,21 +146,30 @@ export const  FetchDataProvider = ({ children }) => {
     };
 getClasses()
   },[])
+
+
+
   useEffect(()=>{
+    console.log('hamadooooooooo ');
     const getTeachers = async () => {
       try {
         const teachersSnapshot = await getDocs(collection(db, 'Teachers'));
       
         const TeachersData = teachersSnapshot.docs.map((doc) => ({ ...doc.data(),
            id: doc.id,
-           dateOfBirth:new Date(doc.data().dateOfBirth.toDate()),
-           joiningDate:new Date(doc.data().joiningDate.toDate()),
-           teacher: `${doc.data().firstName} ${doc.data().lastName}`,
-           value: `${doc.data().firstName} ${doc.data().lastName}`,
-           label: `${doc.data().firstName} ${doc.data().lastName}`,}))
-       
+           birthdate: new Date(doc.data().birthdate.toDate()),
+           teacher: `${doc.data().name}`,
+           educationalsubject: doc.data().educationalsubject,
+           phoneNumber: doc.data().phoneNumber,
+           year: doc.data().year
+          
+
+
+          
+           }))
+        console.log('zakamo extra',TeachersData);
      
-          //console.table(parentsData);
+        console.table(TeachersData);
         setTeachers(TeachersData)
       } catch (error) {
         console.error('Error fetching Teachers:', error);
@@ -182,7 +192,7 @@ getClasses()
           
         }))
         console.log("students: ",StudentsData);
-setStudents(StudentsData)
+      setStudents(StudentsData)
        
       } catch (error) {
         console.error('Error fetching Students:', error);

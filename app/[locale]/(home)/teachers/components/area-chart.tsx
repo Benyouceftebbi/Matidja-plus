@@ -1,43 +1,51 @@
 
-import { Bar, BarChart, Line, LineChart, ResponsiveContainer ,Tooltip} from "recharts"
 
-
+import { AreaChart, Area, XAxis,  Tooltip, ResponsiveContainer, } from 'recharts';
 
 const data = [
-    {
-      revenue: 10400,
-      subscription: 240,
-    },
-    {
-      revenue: 14405,
-      subscription: 300,
-    },
-    {
-      revenue: 9400,
-      subscription: 200,
-    },
-    {
-      revenue: 8200,
-      subscription: 278,
-    },
-    {
-      revenue: 7000,
-      subscription: 189,
-    },
-    {
-      revenue: 9600,
-      subscription: 239,
-    },
-    {
-      revenue: 11244,
-      subscription: 278,
-    },
-    {
-      revenue: 26475,
-      subscription: 189,
-    },
-  ]
-
+  {
+    name: 'Page A',
+    uv: 4000,
+    pv: 2400,
+    amt: 2400,
+  },
+  {
+    name: 'Page B',
+    uv: 3000,
+    pv: 1398,
+    amt: 2210,
+  },
+  {
+    name: 'Page C',
+    uv: 2000,
+    pv: 9800,
+    amt: 2290,
+  },
+  {
+    name: 'Page D',
+    uv: 2780,
+    pv: 3908,
+    amt: 2000,
+  },
+  {
+    name: 'Page E',
+    uv: 1890,
+    pv: 4800,
+    amt: 2181,
+  },
+  {
+    name: 'Page F',
+    uv: 2390,
+    pv: 3800,
+    amt: 2500,
+  },
+  {
+    name: 'Page G',
+    uv: 3490,
+    pv: 4300,
+    amt: 2100,
+  },
+];
 const GradientColors = () => {
     return (
 <linearGradient id="colorView" x1="0" y1="0" x2="0" y2="1">
@@ -48,35 +56,37 @@ const GradientColors = () => {
   };
 export function Overview() {
   return (
-    <div className="h-[80px]">
-    <ResponsiveContainer width="100%" height="100%">
-      <LineChart
-        data={data}
-        margin={{
-          top: 5,
-          right: 10,
-          left: 10,
-          bottom: 0,
-        }}
-      >
-                  <Tooltip />
-        <Line
-          type="monotone"
-          strokeWidth={2}
-          dataKey="revenue"
-          activeDot={{
-            r: 6,
-            style: { fill: "var(221.2 83.2% 53.3%)", opacity: 0.25 },
-          }}
-          style={
-            {
-              stroke: "var(221.2 83.2% 53.3%)",
-              "--theme-primary": `hsl(221.2 83.2% 53.3%)`,
-            } as React.CSSProperties
-          }
-        />
-      </LineChart>
+    <ResponsiveContainer width="100%" height={100} >
+      <AreaChart data={data}   
+  
+   margin={{
+    top: 0,
+    right: 0,
+    left: 0,
+    bottom: 0,
+  }}
+          >
+            <defs>
+            <GradientColors />
+          </defs>
+          <Tooltip />
+   
+          <XAxis
+      dataKey="name"
+      stroke="#888888"
+      fontSize={12}
+      tickLine={false}
+      axisLine={false}
+      interval={0} // Display all labels
+      angle={-45} // Rotate labels if needed
+    />
+     <Area type="monotone"
+      dataKey="uv"   
+          strokeWidth={3}
+      stroke="#1A56DB"  
+             fill="url(#colorView)"   />
+
+      </AreaChart>
     </ResponsiveContainer>
-  </div>
   )
 }
