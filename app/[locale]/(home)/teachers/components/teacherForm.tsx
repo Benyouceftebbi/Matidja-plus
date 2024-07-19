@@ -67,6 +67,9 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { UseFormReturn } from 'react-hook-form';
 import Dayselection from './time-day-select'
+import { TeacherSummary } from './table';
+import { useData } from "@/context/admin/fetchDataContext";
+
 interface FooterProps {
   formData: Teacher;
   form: UseFormReturn<any>; // Use the specific form type if available
@@ -141,6 +144,7 @@ const handleFieldToggle = (field) => {
 };
 
 const subjects = [
+  "Select Option",
   "Mathematics",
   "Physics",
   "Chemistry",
@@ -248,6 +252,7 @@ const subjects = [
             borderStyle: 'solid',
             paddingLeft: '5px',
             borderColor: '#0000001a'}} {...field}>
+          <option value="">Select Option</option>
           <option value="1AM">1AM</option>
           <option value="2AM">2AM</option>
           <option value="3AM">3AM</option>
@@ -423,52 +428,33 @@ const Footer: React.FC<FooterProps> = ({ formData, form, isSubmitting,reset}) =>
     isOptionalStep,
   } = useStepper()
   
+  const  {setTeachers}= useData()
+
 
   const onSubmit = async(data:Teacher) => {
     const teacherId = await addTeacher(data)
     nextStep()
+    setTeachers((prev: Teacher[]) => [...prev, data]);
   };
+
 
   return (
     <>
       {hasCompletedAllSteps && (
-       <div className="h-[450px] flex items-center justify-center my-4 border bg-secondary  rounded-md flex-col" id='printable-content'>
-        
-        <div className="grid grid-cols-2 gap-6">
-          <div className="flex flex-col items-center gap-4">
-            <img src={formData.photo} width={100} height={100} alt="Teacher" className="rounded-full" />
-            <div className="grid gap-1 text-center">
-              <div className="text-xl font-semibold">{formData.name}</div>
-              <div className="text-muted-foreground">{formData.year}</div>
-              <div className="text-sm text-muted-foreground">Born: {format(formData.birthdate, 'MMMM d, yyyy')}</div>
-              <div className="text-sm text-muted-foreground">School: {formData.school}</div>
-            </div>
+      <div className="flex items-center justify-center">
+      <div className="rounded-md bg-green-50 p-6 w-full max-w-md">
+        <div className="flex items-center">
+          <div className="flex-shrink-0">
+            <CircleCheckIcon className="h-7 w-7 text-green-400" />
           </div>
-          <div className="flex flex-col items-center justify-center">
-            <div className="w-40 h-40 bg-muted rounded-md flex items-center justify-center">
+          <div className="ml-4">
+            <h3 className="text-lg font-medium text-green-800">Teacher Created Successfully</h3>
           
-            </div>
           </div>
         </div>
-        <Separator className="my-2" />
-        
-        <div className='w-full px-5'>
-      <h3 className="text-lg font-semibold">Classes</h3>
-      <div className="gap-3 mt-2 grid grid-cols-3 justify-center">
-        {formData.classes.map((classItem:any, index:number) => (
-          <div key={index} className="flex items-center justify-between">
-            <div>
-              <div className="font-medium">{classItem.subject}</div>
-              <div className="text-sm text-muted-foreground">
-                {classItem.name}, {classItem.time}
-              </div>
-            </div>
-          </div>
-        ))}
       </div>
     </div>
-       
-        </div>
+    
       )}
       <div className="w-full flex justify-end gap-2">
         {hasCompletedAllSteps ? (
@@ -521,3 +507,25 @@ function CheckIcon(props) {
             </svg>
           )
         }
+
+
+        function CircleCheckIcon(props) {
+          return (
+            <svg
+              {...props}
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>
+          )
+        }
+        

@@ -159,8 +159,18 @@ interface DataTableDemoProps {
       },
       {
         accessorKey: "field",
-        header: () => <div >field</div>,
-        cell: ({ row }) => <div>{row.original.field}</div>,
+        header: () => <div>Field</div>,
+        cell: ({ row }) => {
+          const classes = row.original.classes || [];
+          const streams = classes.flatMap((classItem: any) => classItem.stream || []);
+          const uniqueStreams = Array.from(new Set(streams)).sort();
+  
+          return (
+            <div className="text-sm text-muted-foreground">
+              {uniqueStreams.length > 0 ? uniqueStreams.join(', ') : 'No streams available'}
+            </div>
+          );
+        }
       },
       {
         accessorKey: "phone",
