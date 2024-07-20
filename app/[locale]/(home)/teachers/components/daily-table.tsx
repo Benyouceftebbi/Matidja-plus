@@ -47,23 +47,23 @@ export const DailyAtandenceDataTable = () => {
  
   
   const filteredStudents: { [key: string]: studentAttandance[] } = {
-    "Algebra I": [
+    Economics: [
       { id: "1", name: "John Smith", status: "Present" },
       { id: "2", name: "Jane Doe", status: "Absent" },
       { id: "3", name: "Mary Johnson", status: "Present" },
     ],
-    Geometry: [
+    "Scientific Stream": [
       { id: "1", name: "James Brown", status: "Absent" },
       { id: "2", name: "Patricia Davis", status: "Present" },
       { id: "3", name: "Robert Wilson", status: "Absent" },
     ],
-    Calculus: [
+    "Mathematics and Technology": [
       { id: "1", name: "Linda Martinez", status: "Present" },
       { id: "2", name: "Michael Garcia", status: "Absent" },
       { id: "3", name: "Elizabeth Lee", status: "Present" },
      
     ],
-    Physics: [
+    Mathematics: [
       { id: "1", name: "William Clark", status: "Present" },
       { id: "2", name: "Barbara Lewis", status: "Absent" },
       { id: "3", name: "Daniel Walker", status: "Present" },
@@ -72,10 +72,10 @@ export const DailyAtandenceDataTable = () => {
   };
 
   const classSchedules = [
-    { time: "9:00 AM - 10:30 AM", subject: "Algebra I", students: "3/3" },
-    { time: "11:00 AM - 12:30 PM", subject: "Geometry", students: "3/3" },
-    { time: "1:30 PM - 3:00 PM", subject: "Calculus", students: "3/3" },
-    { time: "3:30 PM - 5:00 PM", subject: "Physics", students: "3/3" },
+    { time: "9:00 AM - 10:30 AM", subject: "Economics", students: "3/3" },
+    { time: "11:00 AM - 12:30 PM", subject: "Scientific Stream", students: "3/3" },
+    { time: "1:30 PM - 3:00 PM", subject: "Mathematics and Technology", students: "3/3" },
+    { time: "3:30 PM - 5:00 PM", subject: "Mathematics", students: "3/3" },
     
   ];
 
@@ -157,9 +157,9 @@ export const DailyAtandenceDataTable = () => {
     <div className="max-w-5xl mx-auto">
       <div className="flex flex-col md:flex-row items-center justify-between mb-6">
         <div className="flex items-center gap-4">
-          <img src="/placeholder.svg" alt="Teacher Avatar" width={64} height={64} className="rounded-full" />
+          
           <div>
-            <h1 className="text-2xl font-bold">Jane Doe</h1>
+            <h1 className="text-2xl font-bold">SAID YOUCEF</h1>
             <p className="text-muted-foreground">Math Teacher</p>
           </div>
         </div>

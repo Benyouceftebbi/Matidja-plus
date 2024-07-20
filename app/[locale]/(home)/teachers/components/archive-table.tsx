@@ -108,88 +108,365 @@ export const ArchiveDataTable = () => {
           { date: "2023-06-30", present: true },
         ],
       },
-    ]
-    const physicsData = [
       {
-        name: "Michael Johnson",
-        attendance: [
-          { date: "2023-06-01", present: true },
-          { date: "2023-06-02", present: true },
-          { date: "2023-06-03", present: false },
-          { date: "2023-06-04", present: true },
-          { date: "2023-06-05", present: true },
-          { date: "2023-06-06", present: true },
-          { date: "2023-06-07", present: true },
-          { date: "2023-06-08", present: false },
-          { date: "2023-06-09", present: true },
-          { date: "2023-06-10", present: true },
-          { date: "2023-06-11", present: true },
-          { date: "2023-06-12", present: true },
-          { date: "2023-06-13", present: false },
-          { date: "2023-06-14", present: true },
-          { date: "2023-06-15", present: true },
-          { date: "2023-06-16", present: true },
-          { date: "2023-06-17", present: true },
-          { date: "2023-06-18", present: false },
-          { date: "2023-06-19", present: true },
-          { date: "2023-06-20", present: true },
-          { date: "2023-06-21", present: true },
-          { date: "2023-06-22", present: true },
-          { date: "2023-06-23", present: true },
-          { date: "2023-06-24", present: true },
-          { date: "2023-06-25", present: false },
-          { date: "2023-06-26", present: true },
-          { date: "2023-06-27", present: true },
-          { date: "2023-06-28", present: true },
-          { date: "2023-06-29", present: true },
-          { date: "2023-06-30", present: true },
-        ],
+        "name": "Mary Johnson",
+        "attendance": [
+          { "date": "2023-06-01", "present": true },
+          { "date": "2023-06-02", "present": false },
+          { "date": "2023-06-03", "present": true },
+          { "date": "2023-06-04", "present": true },
+          { "date": "2023-06-05", "present": true },
+          { "date": "2023-06-06", "present": false },
+          { "date": "2023-06-07", "present": true },
+          { "date": "2023-06-08", "present": true },
+          { "date": "2023-06-09", "present": true },
+          { "date": "2023-06-10", "present": true },
+          { "date": "2023-06-11", "present": false },
+          { "date": "2023-06-12", "present": true },
+          { "date": "2023-06-13", "present": true },
+          { "date": "2023-06-14", "present": true },
+          { "date": "2023-06-15", "present": true },
+          { "date": "2023-06-16", "present": false },
+          { "date": "2023-06-17", "present": true },
+          { "date": "2023-06-18", "present": true },
+          { "date": "2023-06-19", "present": true },
+          { "date": "2023-06-20", "present": true },
+          { "date": "2023-06-21", "present": false },
+          { "date": "2023-06-22", "present": true },
+          { "date": "2023-06-23", "present": true },
+          { "date": "2023-06-24", "present": true },
+          { "date": "2023-06-25", "present": true },
+          { "date": "2023-06-26", "present": false },
+          { "date": "2023-06-27", "present": true },
+          { "date": "2023-06-28", "present": true },
+          { "date": "2023-06-29", "present": true },
+          { "date": "2023-06-30", "present": true }
+        ]
       },
       {
-        name: "Emily Davis",
-        attendance: [
-          { date: "2023-06-01", present: true },
-          { date: "2023-06-02", present: true },
-          { date: "2023-06-03", present: true },
-          { date: "2023-06-04", present: false },
-          { date: "2023-06-05", present: true },
-          { date: "2023-06-06", present: true },
-          { date: "2023-06-07", present: true },
-          { date: "2023-06-08", present: true },
-          { date: "2023-06-09", present: true },
-          { date: "2023-06-10", present: true },
-          { date: "2023-06-11", present: true },
-          { date: "2023-06-12", present: false },
-          { date: "2023-06-13", present: true },
-          { date: "2023-06-14", present: true },
-          { date: "2023-06-15", present: true },
-          { date: "2023-06-16", present: true },
-          { date: "2023-06-17", present: true },
-          { date: "2023-06-18", present: true },
-          { date: "2023-06-19", present: true },
-          { date: "2023-06-20", present: false },
-          { date: "2023-06-21", present: true },
-          { date: "2023-06-22", present: true },
-          { date: "2023-06-23", present: true },
-          { date: "2023-06-24", present: true },
-          { date: "2023-06-25", present: true },
-          { date: "2023-06-26", present: true },
-          { date: "2023-06-27", present: true },
-          { date: "2023-06-28", present: false },
-          { date: "2023-06-29", present: true },
-          { date: "2023-06-30", present: true },
-        ],
+        "name": "James Brown",
+        "attendance": [
+          { "date": "2023-06-01", "present": true },
+          { "date": "2023-06-02", "present": false },
+          { "date": "2023-06-03", "present": true },
+          { "date": "2023-06-04", "present": true },
+          { "date": "2023-06-05", "present": true },
+          { "date": "2023-06-06", "present": false },
+          { "date": "2023-06-07", "present": true },
+          { "date": "2023-06-08", "present": true },
+          { "date": "2023-06-09", "present": true },
+          { "date": "2023-06-10", "present": true },
+          { "date": "2023-06-11", "present": false },
+          { "date": "2023-06-12", "present": true },
+          { "date": "2023-06-13", "present": true },
+          { "date": "2023-06-14", "present": true },
+          { "date": "2023-06-15", "present": true },
+          { "date": "2023-06-16", "present": false },
+          { "date": "2023-06-17", "present": true },
+          { "date": "2023-06-18", "present": true },
+          { "date": "2023-06-19", "present": true },
+          { "date": "2023-06-20", "present": true },
+          { "date": "2023-06-21", "present": false },
+          { "date": "2023-06-22", "present": true },
+          { "date": "2023-06-23", "present": true },
+          { "date": "2023-06-24", "present": true },
+          { "date": "2023-06-25", "present": true },
+          { "date": "2023-06-26", "present": false },
+          { "date": "2023-06-27", "present": true },
+          { "date": "2023-06-28", "present": true },
+          { "date": "2023-06-29", "present": true },
+          { "date": "2023-06-30", "present": true }
+        ]
       },
+      {
+        "name": "Patricia Davis",
+        "attendance": [
+          { "date": "2023-06-01", "present": true },
+          { "date": "2023-06-02", "present": false },
+          { "date": "2023-06-03", "present": true },
+          { "date": "2023-06-04", "present": true },
+          { "date": "2023-06-05", "present": true },
+          { "date": "2023-06-06", "present": false },
+          { "date": "2023-06-07", "present": true },
+          { "date": "2023-06-08", "present": true },
+          { "date": "2023-06-09", "present": true },
+          { "date": "2023-06-10", "present": true },
+          { "date": "2023-06-11", "present": false },
+          { "date": "2023-06-12", "present": true },
+          { "date": "2023-06-13", "present": true },
+          { "date": "2023-06-14", "present": true },
+          { "date": "2023-06-15", "present": true },
+          { "date": "2023-06-16", "present": false },
+          { "date": "2023-06-17", "present": true },
+          { "date": "2023-06-18", "present": true },
+          { "date": "2023-06-19", "present": true },
+          { "date": "2023-06-20", "present": true },
+          { "date": "2023-06-21", "present": false },
+          { "date": "2023-06-22", "present": true },
+          { "date": "2023-06-23", "present": true },
+          { "date": "2023-06-24", "present": true },
+          { "date": "2023-06-25", "present": true },
+          { "date": "2023-06-26", "present": false },
+          { "date": "2023-06-27", "present": true },
+          { "date": "2023-06-28", "present": true },
+          { "date": "2023-06-29", "present": true },
+          { "date": "2023-06-30", "present": true }
+        ]
+      },
+      {
+        "name": "Robert Wilson",
+        "attendance": [
+          { "date": "2023-06-01", "present": true },
+          { "date": "2023-06-02", "present": false },
+          { "date": "2023-06-03", "present": true },
+          { "date": "2023-06-04", "present": true },
+          { "date": "2023-06-05", "present": true },
+          { "date": "2023-06-06", "present": false },
+          { "date": "2023-06-07", "present": true },
+          { "date": "2023-06-08", "present": true },
+          { "date": "2023-06-09", "present": true },
+          { "date": "2023-06-10", "present": true },
+          { "date": "2023-06-11", "present": false },
+          { "date": "2023-06-12", "present": true },
+          { "date": "2023-06-13", "present": true },
+          { "date": "2023-06-14", "present": true },
+          { "date": "2023-06-15", "present": true },
+          { "date": "2023-06-16", "present": false },
+          { "date": "2023-06-17", "present": true },
+          { "date": "2023-06-18", "present": true },
+          { "date": "2023-06-19", "present": true },
+          { "date": "2023-06-20", "present": true },
+          { "date": "2023-06-21", "present": false },
+          { "date": "2023-06-22", "present": true },
+          { "date": "2023-06-23", "present": true },
+          { "date": "2023-06-24", "present": true },
+          { "date": "2023-06-25", "present": true },
+          { "date": "2023-06-26", "present": false },
+          { "date": "2023-06-27", "present": true },
+          { "date": "2023-06-28", "present": true },
+          { "date": "2023-06-29", "present": true },
+          { "date": "2023-06-30", "present": true }
+        ]
+      },
+      {
+        "name": "Linda Martinez",
+        "attendance": [
+          { "date": "2023-06-01", "present": true },
+          { "date": "2023-06-02", "present": false },
+          { "date": "2023-06-03", "present": true },
+          { "date": "2023-06-04", "present": true },
+          { "date": "2023-06-05", "present": true },
+          { "date": "2023-06-06", "present": false },
+          { "date": "2023-06-07", "present": true },
+          { "date": "2023-06-08", "present": true },
+          { "date": "2023-06-09", "present": true },
+          { "date": "2023-06-10", "present": true },
+          { "date": "2023-06-11", "present": false },
+          { "date": "2023-06-12", "present": true },
+          { "date": "2023-06-13", "present": true },
+          { "date": "2023-06-14", "present": true },
+          { "date": "2023-06-15", "present": true },
+          { "date": "2023-06-16", "present": false },
+          { "date": "2023-06-17", "present": true },
+          { "date": "2023-06-18", "present": true },
+          { "date": "2023-06-19", "present": true },
+          { "date": "2023-06-20", "present": true },
+          { "date": "2023-06-21", "present": false },
+          { "date": "2023-06-22", "present": true },
+          { "date": "2023-06-23", "present": true },
+          { "date": "2023-06-24", "present": true },
+          { "date": "2023-06-25", "present": true },
+          { "date": "2023-06-26", "present": false },
+          { "date": "2023-06-27", "present": true },
+          { "date": "2023-06-28", "present": true },
+          { "date": "2023-06-29", "present": true },
+          { "date": "2023-06-30", "present": true }
+        ]
+      },
+      {
+        "name": "Michael Garcia",
+        "attendance": [
+          { "date": "2023-06-01", "present": true },
+          { "date": "2023-06-02", "present": false },
+          { "date": "2023-06-03", "present": true },
+          { "date": "2023-06-04", "present": true },
+          { "date": "2023-06-05", "present": true },
+          { "date": "2023-06-06", "present": false },
+          { "date": "2023-06-07", "present": true },
+          { "date": "2023-06-08", "present": true },
+          { "date": "2023-06-09", "present": true },
+          { "date": "2023-06-10", "present": true },
+          { "date": "2023-06-11", "present": false },
+          { "date": "2023-06-12", "present": true },
+          { "date": "2023-06-13", "present": true },
+          { "date": "2023-06-14", "present": true },
+          { "date": "2023-06-15", "present": true },
+          { "date": "2023-06-16", "present": false },
+          { "date": "2023-06-17", "present": true },
+          { "date": "2023-06-18", "present": true },
+          { "date": "2023-06-19", "present": true },
+          { "date": "2023-06-20", "present": true },
+          { "date": "2023-06-21", "present": false },
+          { "date": "2023-06-22", "present": true },
+          { "date": "2023-06-23", "present": true },
+          { "date": "2023-06-24", "present": true },
+          { "date": "2023-06-25", "present": true },
+          { "date": "2023-06-26", "present": false },
+          { "date": "2023-06-27", "present": true },
+          { "date": "2023-06-28", "present": true },
+          { "date": "2023-06-29", "present": true },
+          { "date": "2023-06-30", "present": true }
+        ]
+      },
+      {
+        "name": "Elizabeth Lee",
+        "attendance": [
+          { "date": "2023-06-01", "present": true },
+          { "date": "2023-06-02", "present": false },
+          { "date": "2023-06-03", "present": true },
+          { "date": "2023-06-04", "present": true },
+          { "date": "2023-06-05", "present": true },
+          { "date": "2023-06-06", "present": false },
+          { "date": "2023-06-07", "present": true },
+          { "date": "2023-06-08", "present": true },
+          { "date": "2023-06-09", "present": true },
+          { "date": "2023-06-10", "present": true },
+          { "date": "2023-06-11", "present": false },
+          { "date": "2023-06-12", "present": true },
+          { "date": "2023-06-13", "present": true },
+          { "date": "2023-06-14", "present": true },
+          { "date": "2023-06-15", "present": true },
+          { "date": "2023-06-16", "present": false },
+          { "date": "2023-06-17", "present": true },
+          { "date": "2023-06-18", "present": true },
+          { "date": "2023-06-19", "present": true },
+          { "date": "2023-06-20", "present": true },
+          { "date": "2023-06-21", "present": false },
+          { "date": "2023-06-22", "present": true },
+          { "date": "2023-06-23", "present": true },
+          { "date": "2023-06-24", "present": true },
+          { "date": "2023-06-25", "present": true },
+          { "date": "2023-06-26", "present": false },
+          { "date": "2023-06-27", "present": true },
+          { "date": "2023-06-28", "present": true },
+          { "date": "2023-06-29", "present": true },
+          { "date": "2023-06-30", "present": true }
+        ]
+      },
+      {
+        "name": "William Clark",
+        "attendance": [
+          { "date": "2023-06-01", "present": true },
+          { "date": "2023-06-02", "present": false },
+          { "date": "2023-06-03", "present": true },
+          { "date": "2023-06-04", "present": true },
+          { "date": "2023-06-05", "present": true },
+          { "date": "2023-06-06", "present": false },
+          { "date": "2023-06-07", "present": true },
+          { "date": "2023-06-08", "present": true },
+          { "date": "2023-06-09", "present": true },
+          { "date": "2023-06-10", "present": true },
+          { "date": "2023-06-11", "present": false },
+          { "date": "2023-06-12", "present": true },
+          { "date": "2023-06-13", "present": true },
+          { "date": "2023-06-14", "present": true },
+          { "date": "2023-06-15", "present": true },
+          { "date": "2023-06-16", "present": false },
+          { "date": "2023-06-17", "present": true },
+          { "date": "2023-06-18", "present": true },
+          { "date": "2023-06-19", "present": true },
+          { "date": "2023-06-20", "present": true },
+          { "date": "2023-06-21", "present": false },
+          { "date": "2023-06-22", "present": true },
+          { "date": "2023-06-23", "present": true },
+          { "date": "2023-06-24", "present": true },
+          { "date": "2023-06-25", "present": true },
+          { "date": "2023-06-26", "present": false },
+          { "date": "2023-06-27", "present": true },
+          { "date": "2023-06-28", "present": true },
+          { "date": "2023-06-29", "present": true },
+          { "date": "2023-06-30", "present": true }
+        ]
+      },
+      {
+        "name": "Barbara Lewis",
+        "attendance": [
+          { "date": "2023-06-01", "present": true },
+          { "date": "2023-06-02", "present": false },
+          { "date": "2023-06-03", "present": true },
+          { "date": "2023-06-04", "present": true },
+          { "date": "2023-06-05", "present": true },
+          { "date": "2023-06-06", "present": false },
+          { "date": "2023-06-07", "present": true },
+          { "date": "2023-06-08", "present": true },
+          { "date": "2023-06-09", "present": true },
+          { "date": "2023-06-10", "present": true },
+          { "date": "2023-06-11", "present": false },
+          { "date": "2023-06-12", "present": true },
+          { "date": "2023-06-13", "present": true },
+          { "date": "2023-06-14", "present": true },
+          { "date": "2023-06-15", "present": true },
+          { "date": "2023-06-16", "present": false },
+          { "date": "2023-06-17", "present": true },
+          { "date": "2023-06-18", "present": true },
+          { "date": "2023-06-19", "present": true },
+          { "date": "2023-06-20", "present": true },
+          { "date": "2023-06-21", "present": false },
+          { "date": "2023-06-22", "present": true },
+          { "date": "2023-06-23", "present": true },
+          { "date": "2023-06-24", "present": true },
+          { "date": "2023-06-25", "present": true },
+          { "date": "2023-06-26", "present": false },
+          { "date": "2023-06-27", "present": true },
+          { "date": "2023-06-28", "present": true },
+          { "date": "2023-06-29", "present": true },
+          { "date": "2023-06-30", "present": true }
+        ]
+      },
+      {
+        "name": "Daniel Walker",
+        "attendance": [
+          { "date": "2023-06-01", "present": true },
+          { "date": "2023-06-02", "present": false },
+          { "date": "2023-06-03", "present": true },
+          { "date": "2023-06-04", "present": true },
+          { "date": "2023-06-05", "present": true },
+          { "date": "2023-06-06", "present": false },
+          { "date": "2023-06-07", "present": true },
+          { "date": "2023-06-08", "present": true },
+          { "date": "2023-06-09", "present": true },
+          { "date": "2023-06-10", "present": true },
+          { "date": "2023-06-11", "present": false },
+          { "date": "2023-06-12", "present": true },
+          { "date": "2023-06-13", "present": true },
+          { "date": "2023-06-14", "present": true },
+          { "date": "2023-06-15", "present": true },
+          { "date": "2023-06-16", "present": false },
+          { "date": "2023-06-17", "present": true },
+          { "date": "2023-06-18", "present": true },
+          { "date": "2023-06-19", "present": true },
+          { "date": "2023-06-20", "present": true },
+          { "date": "2023-06-21", "present": false },
+          { "date": "2023-06-22", "present": true },
+          { "date": "2023-06-23", "present": true },
+          { "date": "2023-06-24", "present": true },
+          { "date": "2023-06-25", "present": true },
+          { "date": "2023-06-26", "present": false },
+          { "date": "2023-06-27", "present": true },
+          { "date": "2023-06-28", "present": true },
+          { "date": "2023-06-29", "present": true },
+          { "date": "2023-06-30", "present": true }
+        ]
+      }
+      
     ]
+   
 
 
     const filteredAlgebraData = algebraData.filter((student) =>
     student.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  const filteredPhysicsData = physicsData.filter((student) =>
-    student.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
+  
   const columns: ColumnDef<StudentValues>[] = [
     {
       accessorKey: "name",
@@ -282,7 +559,7 @@ export const ArchiveDataTable = () => {
       <Separator className="my-8" />
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold">Algebra</h2>
+          <h2 className="text-xl font-bold">List</h2>
           <Input
             placeholder="Search Student..."
             value={searchTerm}
@@ -319,39 +596,7 @@ export const ArchiveDataTable = () => {
           </TableBody>
         </Table>
       </div>
-      <div className="mt-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold">Physics</h2>
-          <Button variant="outline" className="flex items-center gap-2 hover:bg-muted/50 transition-colors">
-            <DownloadIcon className="w-5 h-5" />
-            Export
-          </Button>
-        </div>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="sticky left-0 bg-background w-[200px]">Student</TableHead>
-              {Array.from({ length: daysInMonth }, (_, i) => (
-                <TableHead key={i} className="w-[50px] text-center">
-                  {i + 1}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredPhysicsData.map((student) => (
-              <TableRow key={student.name}>
-                <TableCell className="sticky left-0 bg-background font-medium">{student.name}</TableCell>
-                {student.attendance.map((record, i) => (
-                  <TableCell key={i} className={`text-center ${record.present ? "text-green-500" : "text-red-500"}`}>
-                    {record.present ? <CheckIcon className="w-5 h-5" /> : <XIcon className="w-5 h-5" />}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+     
     </div>
   );
 };

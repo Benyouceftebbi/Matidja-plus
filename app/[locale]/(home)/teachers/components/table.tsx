@@ -58,6 +58,7 @@ import { deleteTeacher } from "@/lib/hooks/students"
 import TeacherForm from "./teacherForm"
 import TeacherPaymentSheet from "./teacherPaymentSheet"
 import EditTeacher from "./editTeacher"
+import {AtandenceDataModel} from './attandance-report'
 type Status = 'accepted' | 'pending' | 'rejected';
 export type TeacherSummary = {
   id: string;
@@ -73,6 +74,7 @@ interface DataTableDemoProps {
 }
   export const DataTableDemo: React.FC<DataTableDemoProps> = ({ filter }) => {
     const [open,setOpen]=React.useState(false)
+    const [openCard, setOpenCard] = React.useState(false)
     const [openPayment,setOpenPayment]=React.useState(false)
     const t=useTranslations()
     const {teachers,setTeachers}=useData()
@@ -126,6 +128,10 @@ interface DataTableDemoProps {
       setTeacher(teacher)
       setOpen(true); // Open the sheet after setting the level
     };
+    const openAttendanceCard = (tudent:Teacher) => {
+      setTeacher(teacher)
+      setOpenCard(true); // Open the sheet after setting the level
+    };
     const openPaymentSheet = (teacher:Teacher) => {
       setTeacher(teacher)
       setOpenPayment(true); // Open the sheet after setting the level
@@ -143,12 +149,12 @@ interface DataTableDemoProps {
     
     const columns: ColumnDef<any>[] = [
       {
-        accessorKey: "teacher",
+        accessorKey: "name",
         header: () => <div >{t('teacher')}</div>,
   
         cell: ({ row }) => (
           <div className="capitalize">
-             <div className="font-medium">{row.getValue("teacher")}</div>
+             <div className="font-medium">{row.getValue("name")}</div>
           </div>
         ),
       },
@@ -219,10 +225,16 @@ interface DataTableDemoProps {
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => openEditSheet(teacher)}>
                   {t('edit')} </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => openAttendanceCard(teacher)}>
+                  {t('Attandance')} </DropdownMenuItem>
+
+
                 <DropdownMenuItem onClick={() =>{deleteTeacher(teacher.id), setTeachers((prevTeachers:any) =>
       prevTeachers.filter((std:any) => std.id !== teacher.id)
     )}}>
           {t('delete')} </DropdownMenuItem>
+         
+
               </DropdownMenuContent>
             </DropdownMenu>
           );
@@ -312,9 +324,9 @@ const orderedMonths = [
     
     <Input
           placeholder={t('filter-teacher')}
-          value={(table.getColumn("teacher")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("teacher")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm mt-4"
         />
@@ -432,6 +444,7 @@ const orderedMonths = [
         </div>
       </div>
       <EditTeacher open={open} setOpen={setOpen}  teacher={teacher}/>
+      <AtandenceDataModel open={openCard} setOpen={setOpenCard}  teacher={teacher}/>
     </CardContent>
   </Card>
 

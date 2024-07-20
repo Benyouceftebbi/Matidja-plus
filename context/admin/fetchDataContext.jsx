@@ -159,6 +159,7 @@ getClasses()
            id: doc.id,
            birthdate: new Date(doc.data().birthdate.toDate()),
            teacher: `${doc.data().name}`,
+           name: `${doc.data().name}`,
            educationalsubject: doc.data().educationalsubject,
            phoneNumber: doc.data().phoneNumber,
            year: doc.data().year
