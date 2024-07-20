@@ -74,7 +74,7 @@ interface DataTableDemoProps {
 }
   export const DataTableDemo: React.FC<DataTableDemoProps> = ({ filter }) => {
     const [open,setOpen]=React.useState(false)
-    const [openCard, setOpenCard] = React.useState(false)
+    const [openCard, setOpenCard] = React.useState(true)
     const [openPayment,setOpenPayment]=React.useState(false)
     const t=useTranslations()
     const {teachers,setTeachers}=useData()

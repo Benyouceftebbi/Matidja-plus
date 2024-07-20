@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator"
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
 import {ArchiveDataTable} from './archive-table'
 import { DailyAtandenceDataTable } from './daily-table'
+
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 import {
@@ -41,7 +42,7 @@ export const AtandenceDataModel: React.FC<openModelProps> = ({ setOpen, open,tea
          </SheetHeader>
     
     <div className="bg-background text-foreground p-6 md:p-10">
-    <DailyAtandenceDataTable/>
+ <DailyAtandenceDataTable/>
     <Separator className="my-8" />
      <ArchiveDataTable/>
     </div>
