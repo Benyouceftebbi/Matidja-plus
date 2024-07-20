@@ -545,13 +545,10 @@ export const ArchiveDataTable = () => {
         <div className="flex items-center gap-4 text-muted-foreground">
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline" className="flex items-center gap-2 hover:bg-muted/50 transition-colors">
-                <CalendarDaysIcon className="w-5 h-5" />
-                {selectedDate.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
-              </Button>
+             
             </PopoverTrigger>
             <PopoverContent className="p-0">
-              <Calendar value={selectedDate} onChange={setSelectedDate} className="p-4" />
+             
             </PopoverContent>
           </Popover>
         </div>
@@ -577,7 +574,7 @@ export const ArchiveDataTable = () => {
               <TableHead className="sticky left-0 bg-background w-[200px]">Student</TableHead>
               {Array.from({ length: daysInMonth }, (_, i) => (
                 <TableHead key={i} className="w-[50px] text-center">
-                  {i + 1}
+                 Week {i + 1}
                 </TableHead>
               ))}
             </TableRow>
