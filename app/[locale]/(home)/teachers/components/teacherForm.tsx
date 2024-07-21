@@ -106,7 +106,7 @@ export default function TeacherForm() {
    
     
     const classes = [...getValues('classes')]; // Get the current prices array
-    console.log('abdooooo',classes[index]);
+   
     
     if (field === 'stream'){
     
@@ -131,7 +131,7 @@ export default function TeacherForm() {
  
 
 const [selectedFields, setSelectedFields] = useState([]);
-console.log('zaks',selectedFields);
+
 
   
 

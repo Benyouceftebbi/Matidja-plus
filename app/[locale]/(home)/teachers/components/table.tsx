@@ -54,7 +54,7 @@ import { Teacher }  from "@/validators/teacher";
 import { useData } from "@/context/admin/fetchDataContext";
 import { z } from "zod"
 import { useTranslations } from "next-intl"
-import { deleteTeacher } from "@/lib/hooks/students"
+import { deleteTeacher } from "@/lib/hooks/teachers"
 import TeacherForm from "./teacherForm"
 import TeacherPaymentSheet from "./teacherPaymentSheet"
 import EditTeacher from "./editTeacher"
