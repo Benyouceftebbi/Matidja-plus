@@ -24,12 +24,14 @@ import {
 
 interface openModelProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  open: boolean; // Specify the type of setOpen
+  open: boolean;
   teacher: any;
-  selectedEvent: EventInput | null; // Add selectedEvent prop
+  selectedEvent: EventInput | null;
+  classSchedules: Array<{ time: string, subject: string }>;
+  students: StudentValues[];
 }
 
-export const AtandenceDataModel: React.FC<openModelProps> = ({ setOpen, open, teacher, selectedEvent }) => {
+export const AtandenceDataModel: React.FC<openModelProps> = ({ setOpen, open, teacher, selectedEvent, classSchedules, students }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   
   return (
@@ -44,7 +46,7 @@ export const AtandenceDataModel: React.FC<openModelProps> = ({ setOpen, open, te
           </SheetHeader>
 
           <div className="bg-background text-foreground p-6 md:p-10">
-            <DailyAtandenceDataTable selectedEvent={selectedEvent} /> {/* Pass selectedEvent to DailyAtandenceDataTable */}
+            <DailyAtandenceDataTable selectedEvent={selectedEvent} classSchedules={classSchedules} students={students} />
           </div>
 
           <SheetFooter className="mt-5">

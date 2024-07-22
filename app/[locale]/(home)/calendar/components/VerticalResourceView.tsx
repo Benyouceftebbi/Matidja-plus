@@ -25,6 +25,45 @@ const formatTimeToDateTime = (timeString: string, date: string) => {
   return dateTime.toISOString();
 };
 
+// Function to map days to RRule compatible weekdays
+const mapDayToRRule = (day: string) => {
+  const daysMap: { [key: string]: number } = {
+    'Sunday': 0,
+    'Monday': 1,
+    'Tuesday': 2,
+    'Wednesday': 3,
+    'Thursday': 4,
+    'Friday': 5,
+    'Saturday': 6,
+  };
+  return daysMap[day];
+};
+
+const generateRecurringEvents = (startDateTime: string, endDateTime: string, day: string, room: string, subject: string) => {
+  const events = [];
+  const startDate = new Date(startDateTime);
+  const endDate = new Date(endDateTime);
+
+  const recurrenceEndDate = new Date('2025-06-20');
+
+  while (startDate <= recurrenceEndDate) {
+    const event: EventInput = {
+      title: subject,
+      resourceId: room.trim(),  // Ensure this matches the resources' ids
+      start: new Date(startDate),
+      end: new Date(endDate),
+      backgroundColor: getRandomColor(),
+    };
+    events.push(event);
+
+    // Move to the same day in the next week
+    startDate.setDate(startDate.getDate() + 7);
+    endDate.setDate(endDate.getDate() + 7);
+  }
+
+  return events;
+};
+
 const VerticalResourceView = () => {
   const { classes } = useData();
   const [events, setEvents] = useState<EventInput[]>([]);
@@ -51,13 +90,13 @@ const VerticalResourceView = () => {
       const formattedEvents = classes.flatMap((classItem) => {
         // Extract groups array
         const groups = classItem.groups || [];
-        return groups.map((group) => {
+        return groups.flatMap((group) => {
           const { day, start, end, room, subject } = group;
 
           // Basic validation
           if (!start || !end || !room || !subject) {
             console.error('Missing required event properties:', group);
-            return null; // Skip this event if any required property is missing
+            return []; // Skip this event if any required property is missing
           }
 
           // Convert time strings to ISO datetime strings
@@ -66,24 +105,13 @@ const VerticalResourceView = () => {
 
           if (!startDateTime || !endDateTime) {
             console.error(`Invalid time for event: ${group}`, { start, end });
-            return null; // Skip this event if time is invalid
+            return []; // Skip this event if time is invalid
           }
 
           console.log('Event data:', { title: subject, resourceId: room, start: startDateTime, end: endDateTime });
 
-          return {
-            title: subject,
-            resourceId: room.trim(),  // Ensure this matches the resources' ids
-            start: startDateTime,
-            end: endDateTime,
-            backgroundColor: getRandomColor(),
-            extendedProps: {
-              day: day,
-              interval: 1,
-              byweekday: classItem.byweekday,
-            },
-          };
-        }).filter(event => event !== null); // Filter out any null events
+          return generateRecurringEvents(startDateTime, endDateTime, day, room, subject);
+        });
       });
 
       console.log('Formatted events:', formattedEvents); // Log the formatted events
