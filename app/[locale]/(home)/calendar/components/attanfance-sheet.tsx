@@ -29,10 +29,12 @@ interface openModelProps {
   selectedEvent: EventInput | null;
   classSchedules: Array<{ time: string, subject: string }>;
   students: StudentValues[];
+  selectedClasss: any
 }
 
-export const AtandenceDataModel: React.FC<openModelProps> = ({ setOpen, open, teacher, selectedEvent, classSchedules, students }) => {
+export const AtandenceDataModel: React.FC<openModelProps> = ({ setOpen, open, teacher, selectedEvent, classSchedules, students ,selectedClasss}) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  console.log(selectedClasss);
   
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -46,7 +48,7 @@ export const AtandenceDataModel: React.FC<openModelProps> = ({ setOpen, open, te
           </SheetHeader>
 
           <div className="bg-background text-foreground p-6 md:p-10">
-            <DailyAtandenceDataTable selectedEvent={selectedEvent} classSchedules={classSchedules} students={students} />
+            <DailyAtandenceDataTable selectedEvent={selectedEvent} classSchedules={classSchedules} students={students} selectedClasss={selectedClasss} />
           </div>
 
           <SheetFooter className="mt-5">
