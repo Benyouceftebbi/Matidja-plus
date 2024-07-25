@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import FullCalendar, { EventInput } from '@fullcalendar/react';
+import FullCalendar from '@fullcalendar/react';
 import resourceDayGridPlugin from '@fullcalendar/resource-daygrid';
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import rrulePlugin from '@fullcalendar/rrule';
-import { AtandenceDataModel } from './attanfance-sheet';
+import { AttandenceDataModel } from './attendance-sheet';
 import { useData } from '@/context/admin/fetchDataContext';
-
+import resourceTimelinePlugin from '@fullcalendar/resource-timeline'; // Import the resourceTimeline plugin
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import { fr } from 'date-fns/locale'; // Import French locale
+import './style.css'
 // Function to generate a random color
 const getRandomColor = () => {
   const letters = '0123456789ABCDEF';
@@ -21,9 +25,26 @@ const formatTimeToDateTime = (timeString: string, date: string) => {
   if (!timeString) return null;
   const [hours, minutes] = timeString.split(':');
   if (!hours || !minutes) return null;
-  const dateTime = new Date(`${date}T${hours}:${minutes}:00`);
+  
+  // Format the date string to a valid format if necessary
+  // Assuming 'date' is a day of the week (e.g., 'Monday')
+  const currentDate = new Date();
+  const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  let targetDate = new Date(currentDate);
+  
+  // Find the target day
+  const targetDayIndex = daysOfWeek.indexOf(date);
+  if (targetDayIndex === -1) return null; // Invalid day string
+  
+  const currentDayIndex = currentDate.getDay();
+  const diff = (targetDayIndex + 7 - currentDayIndex) % 7; // Calculate the difference in days
+  targetDate.setDate(currentDate.getDate() + diff);
+  
+  const formattedDate = targetDate.toISOString().split('T')[0];
+  const dateTime = new Date(`${formattedDate}T${hours}:${minutes}:00`);
   return dateTime.toISOString();
 };
+
 
 // Function to map days to RRule compatible weekdays
 const mapDayToRRule = (day: string) => {
@@ -47,7 +68,7 @@ const generateRecurringEvents = (startDateTime: string, endDateTime: string, day
   const recurrenceEndDate = new Date('2025-06-20');
 
   while (startDate <= recurrenceEndDate) {
-    const event: EventInput = {
+    const event: any  = {
       title: subject,
       id:id,
       resourceId: room.trim(),  // Ensure this matches the resources' ids
@@ -73,8 +94,8 @@ const generateRecurringEvents = (startDateTime: string, endDateTime: string, day
 
 const VerticalResourceView = () => {
   const { classes } = useData();
-  const [events, setEvents] = useState<EventInput[]>([]);
-  const [selectedEvent, setSelectedEvent] = useState<EventInput | null>(null);
+  const [events, setEvents] = useState<any[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
   const [openCard, setOpenCard] = useState(false);
 
   // Define resources with exact IDs
@@ -109,8 +130,8 @@ const VerticalResourceView = () => {
           }
   
           // Convert time strings to ISO datetime strings
-          const startDateTime = formatTimeToDateTime(start, todayDate);
-          const endDateTime = formatTimeToDateTime(end, todayDate);
+          const startDateTime = formatTimeToDateTime(start, day);
+          const endDateTime = formatTimeToDateTime(end, day);
   
           if (!startDateTime || !endDateTime) {
             console.error('Invalid time for event', `${group}, { start, end }`);
@@ -166,36 +187,51 @@ console.log('zakamo');
 
   return (
     <div>
-      <FullCalendar
-        headerToolbar={{
-          left: 'prev,next today',
-          center: 'title',
-          right: 'resourceDayGridMonth,resourceTimeGridWeek,resourceTimeGridDay',
-        }}
-        plugins={[resourceDayGridPlugin, resourceTimeGridPlugin, rrulePlugin]}
-        initialDate={new Date()}
-        initialView='resourceTimeGridWeek'
-        groupByResource={true}
-        resources={resources}
-        dayMaxEventRows={true}
-        editable={true}
-        droppable={true}
-        events={events}
-        slotMinTime="07:00:00"
-        slotMaxTime="21:00:00"
-        scrollTime="07:00:00" // Set initial scroll time
-        resourceAreaWidth="150px" // Adjust resource area width for better horizontal scrolling
-        contentHeight="auto" // Set content height to auto for flexibility
-        views={{
-          resourceTimeGridWeek: {
-            scrollable: true, // Enable horizontal scrolling for the week view
-            columnHeaderFormat: { weekday: 'short', day: 'numeric' } // Custom format for day title
-          }
-        }}
-        eventClick={handleEventClick} // Add event click handler
-      />
+ {events && ( <FullCalendar
+      headerToolbar={{
+        left: 'prev,next today',
+        center: 'title',
+        right: 'resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth',
+      }}
+      plugins={[resourceTimelinePlugin, dayGridPlugin, timeGridPlugin]}
+      initialDate={new Date()}
+      initialView='resourceTimelineDay'
+      resources={(fetchInfo, successCallback) =>
+        successCallback(resources)
+      }
+      dayMaxEventRows={true}
+      editable={true}
+      droppable={true}
+      events={events}
+      slotMinTime="07:00:00"
+      slotMaxTime="23:00:00"
+      scrollTime="09:00:00"
+      resourceAreaWidth="150px"
+      contentHeight='auto'
+      views={{
+        resourceTimelineWeek: {
+          columnHeaderFormat: { weekday: 'short', day: 'numeric' },
+          slotDuration: '00:30:00' // Set slot duration to 30 minutes
+        },
+        resourceTimelineDay: {
+          slotDuration: '00:30:00' // Set slot duration to 30 minutes
+        },
+        resourceTimelineMonth: {
+          slotDuration: '00:30:00' // Set slot duration to 30 minutes
+        },
+        timeGridWeek: {
+          slotDuration: '00:30:00' // Set slot duration to 30 minutes
+        },
+        timeGridDay: {
+          slotDuration: '00:30:00' // Set slot duration to 30 minutes
+        },
+      }}
+      locale='fr'
+      eventTimeFormat={{ hour: '2-digit', minute: '2-digit', hour12: false, locale: fr }} // Use French locale for time formatting
+      eventClick={handleEventClick} // Add event click handler
+    />)}
       {selectedEvent && (
-        <AtandenceDataModel
+        <AttandenceDataModel
           open={openCard}
           setOpen={setOpenCard}
           teacher={selectedEvent.extendedProps}
@@ -207,3 +243,22 @@ console.log('zakamo');
 };
 
 export default VerticalResourceView;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
