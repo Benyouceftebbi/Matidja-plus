@@ -765,9 +765,12 @@ const result=compareClasses(data.classes,teacher.classes)
     phoneNumber: teacherData.phoneNumber,
   };
 
+  
   // Update the teacher in Firestore
   await updateTeacher(teacherInfoToUpdate,teacher.id);
-    
+  setTeachers((prev: Teacher[]) => 
+  prev.map(t => t.id === teacher.id ? { ...t, ...teacherInfoToUpdate } : t)
+);
   nextStep()
  
     
