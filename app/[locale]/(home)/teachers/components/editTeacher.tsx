@@ -755,7 +755,18 @@ function getClassKey(cls) {
   const onSubmit = async(data:Teacher) => {
 const result=compareClasses(data.classes,teacher.classes)
   await processStudentChanges(result,data)
-  
+  const { classes, ...teacherData } = data;
+
+  // Ensure only name, year, birthdate, and phone number are updated
+  const teacherInfoToUpdate = {
+    name: teacherData.name,
+    year: teacherData.year,
+    birthdate: teacherData.birthdate,
+    phoneNumber: teacherData.phoneNumber,
+  };
+
+  // Update the teacher in Firestore
+  await updateTeacher(teacherInfoToUpdate,teacher.id);
     
   nextStep()
  
