@@ -9,6 +9,8 @@ interface Time {
     end: string;
   }
 interface Class {
+    classId: any;
+    group: any;
     year: string;
     subject: string;
     day: string;
@@ -148,16 +150,69 @@ export const deleteTeacher = async(teacherId:string)=>{
         throw error; // Optionally re-throw the error to propagate it further if needed
     }
 }
+
+
+
+
 export const addGroup=async(cls:any)=>{
 
-
+  try {
     const classDocRef = doc(db, 'Groups', cls.classId);
+    const {classId,year,...rest}=cls
     await updateDoc(classDocRef, {
-      groups: arrayUnion(cls)
+      groups: arrayUnion(rest)
     });
 
-}
-export const removeGroupFromDoc = async (clss,studentArray) => {
+
+  
+      // Create Attendance subcollection for the added group
+      const attendanceRef = collection(classDocRef, "Attendance");
+  
+      const currentDate = new Date();
+      const thisWeekStartDate = startOfWeek(currentDate, { weekStartsOn: 0 });
+      const nextWeekStartDate = addWeeks(thisWeekStartDate, 1);
+  
+      // Create attendance for this week
+      const thisWeekDate = getNextDayOfWeek(cls.day, thisWeekStartDate);
+      const formattedDateThisWeek = format(thisWeekDate, 'yyyy-MM-dd');
+      const dateTimeUIDThisWeek = `${formattedDateThisWeek}-${cls.group}`;
+  
+      // Add attendance document for this week
+      await setDoc(doc(attendanceRef, dateTimeUIDThisWeek), {
+        id: dateTimeUIDThisWeek,
+        start: cls.start,
+        end: cls.end,
+        group: cls.group,
+        attendanceList: []
+      });
+  
+      // Create attendance for next week
+      const nextWeekDate = getNextDayOfWeek(cls.day, nextWeekStartDate);
+      const formattedDateNextWeek = format(nextWeekDate, 'yyyy-MM-dd');
+      const dateTimeUIDNextWeek = `${formattedDateNextWeek}-${cls.group}`;
+  
+      // Add attendance document for next week
+      await setDoc(doc(attendanceRef, dateTimeUIDNextWeek), {
+        id: dateTimeUIDNextWeek,
+        start: cls.start,
+        end: cls.end,
+        group: cls.group,
+        attendanceList: []
+      });
+  
+      console.log(`Group and attendance added successfully for class ID: ${cls.classId}`);
+    } catch (error) {
+      console.error("Error adding group and attendance:", error);
+      throw error;
+    }
+  };
+
+
+
+
+
+  
+export const removeGroupFromDoc = async (clss: { classId: any; day: any; end: any; group: any; quota: any; room: any; start: any; stream: any; subject: any; },studentArray: any[]) => {
     try {
         // Reference to the specific document in the Groups collection
         const docRef = doc(db, 'Groups', clss.classId);

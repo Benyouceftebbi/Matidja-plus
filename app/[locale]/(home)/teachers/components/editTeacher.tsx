@@ -591,33 +591,63 @@ function getClassKey(cls) {
   return `${cls.classId}-${cls.group}`;
 }
   function compareClasses(dataClasses: Class[], teacherClasses: Class[]): UpdateResult {
-    const result: UpdateResult = {
-      added: [],
-      removed: [],
-      updated: []
-    };
-    
-    const dataClassMap = new Map(dataClasses.map((cls,index) => [getClassKey(cls), {...cls,index}]));
-    const teacherClassMap = new Map(teacherClasses.map((cls,index) => [getClassKey(cls), {...cls,index}]));
-  
-    // Find added and updated classes
-    for (const [key, dataClass] of dataClassMap) {
-      if (!('group' in dataClass)) {
-     const classId=classes.find((cls)=>cls.teacherName===teacher.name && cls.year == dataClass.year)
-        result.added.push({...dataClass,classId:classId.id,group:dataClass.index+1,subject:classId.subject});
-      }
+  const result: UpdateResult = {
+    added: [],
+    removed: [],
+    updated: []
+  };
+
+  const dataClassMap = new Map(dataClasses.map((cls, index) => [getClassKey(cls), { ...cls, index }]));
+  const teacherClassMap = new Map(teacherClasses.map((cls, index) => [getClassKey(cls), { ...cls, index }]));
+
+  // Collect all existing groups to find the highest group number
+  const existingGroups = new Set<string>();
+  teacherClasses.forEach(cls => {
+    if (cls.group && cls.group.startsWith('G')) {
+      existingGroups.add(cls.group);
     }
-  
-    // // Find removed classes
-    for (const [id, teacherClass] of teacherClassMap) {
-      if (!dataClassMap.has(id)) {
-        // Class is in teacherClasses but not in dataClasses (removed)
-        result.removed.push(teacherClass);
-      }
+  });
+
+  dataClasses.forEach(cls => {
+    if (cls.group && cls.group.startsWith('G')) {
+      existingGroups.add(cls.group);
     }
-  
-    return result
+  });
+
+  // Determine the highest group number in use
+  let highestGroupNumber = 0;
+  existingGroups.forEach(group => {
+    const groupNumber = parseInt(group.slice(1), 10);
+    if (groupNumber > highestGroupNumber) {
+      highestGroupNumber = groupNumber;
+    }
+  });
+
+  // Find added and updated classes
+  for (const [key, dataClass] of dataClassMap) {
+    if (!('group' in dataClass)) {
+      const classId = classes.find(cls => cls.teacherName === teacher.name && cls.year === dataClass.year);
+      highestGroupNumber++;
+      result.added.push({
+        ...dataClass,
+        classId: classId.id,
+        group: `G${highestGroupNumber}`,
+        subject: classId.subject
+      });
+    }
   }
+
+  // Find removed classes
+  for (const [id, teacherClass] of teacherClassMap) {
+    if (!dataClassMap.has(id)) {
+      // Class is in teacherClasses but not in dataClasses (removed)
+      result.removed.push(teacherClass);
+    }
+  }
+
+  return result;
+}
+
   async function processStudentChanges(result,data) {
     const { added, removed, updated } = result;
   
