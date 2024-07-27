@@ -55,7 +55,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import CalendarDatePicker from '../../students/components/date-picker';
 
-import { addGroup, addTeacher, removeGroupFromDoc, updateTeacher } from '@/lib/hooks/teachers';
+import { addGroup, addTeacher, removeGroupFromDoc, updateTeacher,updateClassGroup } from '@/lib/hooks/teachers';
 import { LoadingButton } from '@/components/ui/loadingButton';
 
 import { UseFormReturn } from 'react-hook-form';
@@ -627,15 +627,43 @@ function getClassKey(cls) {
   for (const [key, dataClass] of dataClassMap) {
     if (!('group' in dataClass)) {
       const classId = classes.find(cls => cls.teacherName === teacher.name && cls.year === dataClass.year);
-      highestGroupNumber++;
-      result.added.push({
-        ...dataClass,
-        classId: classId.id,
-        group: `G${highestGroupNumber}`,
-        subject: classId.subject
-      });
+      if (classId) {
+        highestGroupNumber++;
+        result.added.push({
+          ...dataClass,
+          classId: classId.id,
+          group: `G${highestGroupNumber}`,
+          subject: classId.subject
+        });
+      }
+    } else {
+      const teacherClass = teacherClasses.find(cls => cls.group === dataClass.group && cls.year === dataClass.year);
+      console.log('teacherClass',teacherClass);
+      
+      if (teacherClass) {
+        const hasChanges = (
+          teacherClass.start !== dataClass.start ||
+          teacherClass.end !== dataClass.end ||
+          teacherClass.day !== dataClass.day ||
+          teacherClass.room !== dataClass.room
+        );
+  
+        if (hasChanges) {
+          // Update the database with the new values
+          result.updated.push({
+            ...dataClass,
+            start: dataClass.start,
+            end: dataClass.end,
+            day: dataClass.day,
+            room: dataClass.room
+          });
+          console.log('updated',result);
+          
+        }
+      }
     }
   }
+  
 
   // Find removed classes
   for (const [id, teacherClass] of teacherClassMap) {
@@ -722,35 +750,28 @@ function getClassKey(cls) {
         }
       }
   
-  //        // Change groups for specific students
-  //   if (updated && Array.isArray(updated)) {
-  //     for (const { id,group } of updated) {
-  
-  //  const classToUpdate = classes.find(cls => cls.id === id);
-  //  const updatedStudents = classToUpdate.students.map(std =>
-  //   std.id === student.id
-  //     ? { ...std, group: group }  // Update the student with the new group
-  //     : std
-  // );
-  // await changeStudentGroup(id,student.id,updatedStudents,data.classesUIDs)
-  //       setClasses(prevClasses =>
-  //         prevClasses.map(cls =>
-  //           cls.id === id? {
-  //             ...cls,
-  //             students: cls.students.map(std =>
-  //               std.id === student.id? { ...std, group: group } : student
-  //             )
-  //           } : cls
-  //         )
-  //       );
-  
-  //       setStudents(prevStudents =>
-  //         prevStudents.map(std =>
-  //           std.id === student.id ? {...data} : std
-  //         )
-  //       );
-  //     }
-  //   }
+// Change groups for specific classes
+if (updated && Array.isArray(updated)) {
+  for (const { id, group } of updated) {
+    const classToUpdate = classes.find(cls => cls.id === id);
+   
+    if (classToUpdate) {
+      // Update the class with the new group
+      const updatedClass = { ...classToUpdate, group: group };
+      
+      // Assuming you have a function to update the class in the database
+      await updateClassGroup(group, updatedClass);
+      
+      // Update the state with the new group
+      setClasses((prevClasses: any[]) =>
+        prevClasses.map(cls =>
+          cls.id === id ? updatedClass : cls
+        )
+      );
+    }
+  }
+}
+
     }
   const onSubmit = async(data:Teacher) => {
 const result=compareClasses(data.classes,teacher.classes)
@@ -771,6 +792,13 @@ const result=compareClasses(data.classes,teacher.classes)
   setTeachers((prev: Teacher[]) => 
   prev.map(t => t.id === teacher.id ? { ...t, ...teacherInfoToUpdate } : t)
 );
+
+if (result.updated && Array.isArray(result.updated)) {
+  for (const updatedClass of result.updated) {
+    await updateClassGroup(updatedClass.group, updatedClass);
+  }
+}
+
   nextStep()
  
     

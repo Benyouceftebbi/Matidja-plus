@@ -229,3 +229,15 @@ export const removeGroupFromDoc = async (clss: { classId: any; day: any; end: an
         console.log(`Group removed successfully from document ID: ${docId}`);
     } catch (error) {
     }}
+
+
+
+    export const updateClassGroup = async (group: any, updatedClass: any) => {
+        if (!group || !group.id) {
+          console.error('Invalid group data', group);
+          return;
+        }
+      
+        const docRef = doc(db, 'Groups', group.id);
+        await updateDoc(docRef, updatedClass);
+      };
