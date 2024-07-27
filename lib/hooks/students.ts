@@ -59,7 +59,7 @@ export const addStudent = async (student:Student,) => {
     }
     
 };
-export const updateStudent = async(updatedstudent:Student,studentId:string,student:any,level:any)=>{
+/*export const updateStudent = async(updatedstudent:Student,studentId:string,student:any,level:any)=>{
     try {
             await updateDoc(doc(db, "Students",studentId), updatedstudent);
             // const shortMonth = updatedstudent.joiningDate.toLocaleDateString('en', { month: 'short' });
@@ -86,6 +86,19 @@ export const updateStudent = async(updatedstudent:Student,studentId:string,stude
         // Handle the error here, such as displaying a message to the user or logging it for further investigation
         throw error; // Optionally re-throw the error to propagate it further if needed
     } 
+}
+*/
+
+export const updateStudent = async(updatedstudent: Student,studnetId:string)=>{
+  try {
+          await updateDoc(doc(db, "Students",studnetId), updatedstudent);
+      console.log("Teacher updated successfully:");
+      return true; // Assuming you want to return the ID of the added Teacher
+  } catch (error) {
+      console.error("Error updating Teacher:", error);
+      // Handle the error here, such as displaying a message to the user or logging it for further investigation
+      throw error; // Optionally re-throw the error to propagate it further if needed
+  }
 }
 export const deleteStudent = async ( student, classes) => {
   try {

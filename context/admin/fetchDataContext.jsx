@@ -196,6 +196,7 @@ export const  FetchDataProvider = ({ children }) => {
             student: `${doc.data().name}`,
             value: `${doc.data().name}`,
             label: `${doc.data().name}`,
+            name: `${doc.data().name}`,
           };
 
           // Calculate the result for each student

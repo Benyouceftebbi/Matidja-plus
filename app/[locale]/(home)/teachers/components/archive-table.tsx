@@ -1,8 +1,7 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Calendar } from "@/components/ui/calendar";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import {
   ColumnDef,
@@ -16,57 +15,19 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { useData } from "@/context/admin/fetchDataContext";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-
-export type studentAttandance = {
+export type StudentAttendance = {
   id: string;
   name: string;
   status: string;
+  index: number;
+  group: string;
 };
 
-const algebraData = 
-{
-  id: "1",
-  name: "John Doe",
-  attendance: {
-     "2023-06-01":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-02":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-03":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-04":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-05":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-06":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-07":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-08":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-09":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-10":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-11":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-12":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-13":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-14":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-15":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-16":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-17":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-18":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-19":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-20":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-21":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-22":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-23":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-24":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-25":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-26":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-27":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-28":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-29":{attendanceList:[{name:"youcef",status:"present"}]},
-     "2023-06-30":{attendanceList:[{name:"youcef",status:"present"}]},
-  },
-}
 const getStatusIcon = (status: string) => {
-  // Define how you want to render the status icon
   return status === "present" ? "✔️" : "❌";
 };
 
@@ -78,76 +39,93 @@ const generateDateColumns = (dates: string[]) => {
     cell: ({ row }) => <div>{getStatusIcon(row.getValue(date))}</div>,
   }));
 };
+
 const transformData = (data: any) => {
-  if(data){
-    const { id, name, attendance } = data;
-    // Create a map to store the attendance statuses by name and date
-    const attendanceMap: { [key: string]: { [key: string]: string } } = {};
-  
-    // Initialize the map with all dates
-    for (const [date, { attendanceList }] of Object.entries(attendance)) {
-      attendanceList.forEach(({ name, status,index,group}) => {
+  if (data && data.attendance) {
+    const { attendance } = data;
+    const attendanceMap: { [key: string]: { [key: string]: string, index?: number, group?: string } } = {};
+
+    for (const [date, details] of Object.entries(attendance)) {
+      const { attendanceList } = details;
+      attendanceList.forEach(({ name, status, index, group }) => {
         if (!attendanceMap[name]) {
-          attendanceMap[name] = {};
+          attendanceMap[name] = { index, group };
         }
         attendanceMap[name][date] = status;
-        attendanceMap[name].index = index;
-        attendanceMap[name].group= group;
       });
     }
-  
-    // Convert the map to an array of objects
+
     const rowData = Object.keys(attendanceMap).map(name => ({
-      id,
+      id: data.id,
       name,
       ...attendanceMap[name]
     }));
-  
+
     return rowData;
   }
-  
+  return [];
 };
-export const ArchiveDataTable = ({teacher}) => {
-  const {classes}=useData()
 
-    const [filter,setFilter]=useState('1AS')
-    const transformedData = useMemo(() => transformData(classes.find((cls)=>cls.teacherUID===teacher.id &&cls.subject===teacher.subject && cls.year===filter)), [classes,filter]);
-    const tabsList=classes.filter((cls)=>cls.teacherUID===teacher.id &&cls.subject===teacher.subject )
-      console.log(transformedData);
-      
-    const datesKeys=useMemo(() => classes.find((cls)=>cls.teacherUID===teacher.id &&cls.subject===teacher.subject && cls.year===filter), [classes,filter]);
+export const ArchiveDataTable = ({ teacher }) => {
+  const { classes } = useData();
 
+  const [filter, setFilter] = useState(teacher.year[0]);
 
-    
-    const dates = datesKeys?Object.keys(datesKeys.attendance):null;
-    const baseColumns: ColumnDef<any>[] = [
-  {
-    accessorKey: "index",
-    header: () => <div>index</div>,
-    cell: ({ row }) => <div>{row.getValue("index")}</div>,
-  },
-  {
-    accessorKey: "group",
-    header: () => <div>group</div>,
-    cell: ({ row }) => <div>{row.getValue("group")}</div>,
-  },
-  {
-    accessorKey: "name",
-    header: () => <div>Student Name</div>,
-    cell: ({ row }) => (
-      <div className="capitalize">
-        <div className="font-medium">{row.getValue("name")}</div>
-      </div>
-    ),
-  },
-];
+  // Filter classes based on teacherUID and subject
+  const filteredClasses = useMemo(() => {
+    return classes?.filter((cls) => cls.teacherUID === teacher.id && `{.educational-subject}`=== `{teacher.educational-subject}`);
+  }, [classes, teacher.id, `{teacher.educational-subject}`]);
 
-// Conditionally add date columns
-  const dateColumns = dates ? generateDateColumns(dates) : [];
+  // Select class based on the filter (year)
+  const selectedClass = useMemo(() => {
+    return filteredClasses?.find((cls) => cls.year === filter);
+  }, [filteredClasses, filter]);
 
-// Combine columns
-const columns: ColumnDef<any>[] = [...baseColumns, ...dateColumns];
+  // Debugging outputs
+  useEffect(() => {
+    console.log("Classes:", classes);
+    console.log("Filtered Classes:", filteredClasses);
+    console.log("Selected Class:", selectedClass);
+  }, [classes, filteredClasses, selectedClass]);
 
+  // If selectedClass is undefined, log debug information
+  if (!selectedClass) {
+    console.log("Selected Class is undefined. Debug info:");
+    console.log("Teacher ID:", teacher.id);
+    console.log("Teacher Subject:", `{teacher.educational-subject}`);
+    console.log("Filter Year:", filter);
+    console.log("Filtered Classes after applying teacher ID and subject:", filteredClasses);
+  }
+
+  // Transform data for table display
+  const transformedData = useMemo(() => transformData(selectedClass), [selectedClass]);
+
+  const dates = selectedClass ? Object.keys(selectedClass.attendance) : [];
+
+  const baseColumns: ColumnDef<any>[] = [
+    {
+      accessorKey: "index",
+      header: () => <div>Index</div>,
+      cell: ({ row }) => <div>{row.getValue("index")}</div>,
+    },
+    {
+      accessorKey: "group",
+      header: () => <div>Group</div>,
+      cell: ({ row }) => <div>{row.getValue("group")}</div>,
+    },
+    {
+      accessorKey: "name",
+      header: () => <div>Student Name</div>,
+      cell: ({ row }) => (
+        <div className="capitalize">
+          <div className="font-medium">{row.getValue("name")}</div>
+        </div>
+      ),
+    },
+  ];
+
+  const dateColumns = generateDateColumns(dates);
+  const columns: ColumnDef<any>[] = [...baseColumns, ...dateColumns];
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -194,71 +172,69 @@ const columns: ColumnDef<any>[] = [...baseColumns, ...dateColumns];
       </div>
       <Separator className="my-8" />
       <div>
-      <Tabs defaultValue={tabsList[0]?.year}>
-              <div className="flex items-center">
-                <TabsList>
-                  {tabsList.map((level) => (
-                    <TabsTrigger key={level.year} value={level.year} onClick={() =>setFilter(level.year)}>
-                      {level.year}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-              </div>
-    
-            </Tabs>
+        <Tabs defaultValue={teacher.year[0]}>
+          <div className="flex items-center">
+            <TabsList>
+              {teacher.year.map((level) => (
+                <TabsTrigger key={level} value={level} onClick={() => setFilter(level)}>
+                  {level}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
+        </Tabs>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold">List</h2>
           <Input
-          placeholder="filter"
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm "
-        />
+            placeholder="Filter"
+            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("name")?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm "
+          />
           <Button variant="outline" className="flex items-center gap-2 hover:bg-muted/50 transition-colors">
             <DownloadIcon className="w-5 h-5" />
             Export
           </Button>
         </div>
-      {dates?  (<Table>
-        <TableHeader>
-          {table.getHeaderGroups().map(headerGroup => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map(header => (
-                <TableHead key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                </TableHead>
+        {dates.length > 0 ? (
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map(headerGroup => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map(header => (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                    </TableHead>
+                  ))}
+                </TableRow>
               ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows.map(row => (
-            <TableRow key={row.id}>
-              {row.getVisibleCells().map(cell => (
-                <TableCell key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </TableCell>
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows.map(row => (
+                <TableRow key={row.id}>
+                  {row.getVisibleCells().map(cell => (
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
               ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>):(
-        <div>
-          no attendance available yet 
-          </div>
-      )}
+            </TableBody>
+          </Table>
+        ) : (
+          <div>No attendance available yet</div>
+        )}
       </div>
     </div>
   );
 };
-
 
 function CheckIcon(props) {
   return (
@@ -287,35 +263,6 @@ function DownloadIcon(props) {
       width="24"
       height="24"
       viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-      <polyline points="7 10 12 15 17 10" />
-      <line x1="12" x2="12" y1="15" y2="3" />
-    </svg>
-  );
-}
-
-function XIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M18 6 6 18" />
-      <path d="m6 6 12 12" />
-    </svg>
-  );
-}
+      fill="none"/>
+  );  
+  }

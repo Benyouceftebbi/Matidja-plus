@@ -61,6 +61,7 @@ import EditStudent from "./editStudent"
 type Status = 'accepted' | 'pending' | 'rejected';
 export type StudentSummary = {
   id: string;
+  name: string;
   teacher: string;
   status: Status;
   Subject: string;
@@ -87,6 +88,7 @@ interface DataTableDemoProps {
     }, [students]);
     const [student,setStudent]=React.useState<Student>({  
       id: '123456',
+      name:"",
       level: 'Intermediate',
       firstName: 'John',
       lastName: 'Doe',
@@ -160,12 +162,12 @@ interface DataTableDemoProps {
          }
       },
       {
-        accessorKey: "student",
+        accessorKey: "name",
         header: () => <div >{t('student')}</div>,
   
         cell: ({ row }) => (
           <div className="capitalize">
-             <div className="font-medium">{row.getValue("student")}</div>
+             <div className="font-medium">{row.getValue("name")}</div>
           </div>
         ),
       },
