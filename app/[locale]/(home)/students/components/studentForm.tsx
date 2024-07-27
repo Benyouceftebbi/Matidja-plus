@@ -552,7 +552,7 @@ const Footer: React.FC<FooterProps> = ({ formData, form, isSubmitting,reset}) =>
   const onSubmit = async(data:Student) => {
     
     
-    const studentId=await addStudent({...data,studentIndex:students.length+1})
+    const studentId=await addStudent({...data,studentIndex:students.length+1, isDeleted: false})
     generateQrCode(studentId);
     setStudents((prev: Student[]) => [...prev, {...data,id:studentId,student:data.name,studentIndex:prev.length+1}]);
     setClasses((prev: any[]) =>

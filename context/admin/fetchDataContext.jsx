@@ -132,7 +132,8 @@ export const  FetchDataProvider = ({ children }) => {
         const [groupsSnapshot, teachersSnapshot, studentsSnapshot] = await Promise.all([
           getDocs(collection(db, 'Groups')),
           getDocs(collection(db, 'Teachers')),
-          getDocs(collection(db, 'Students'))
+
+          getDocs(query(collection(db, 'Students'), where('isDeleted', '==', false)))
         ]);
 
         // Process groups and attendance data

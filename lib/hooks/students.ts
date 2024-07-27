@@ -46,6 +46,7 @@ export const addStudent = async (student:Student,) => {
        } 
         student.classes.map(async (cls)=>{
             await updateDoc(doc(db,'Groups',cls.id),{
+             
                 students:arrayUnion({
                     id:studentRef.id,name:student.name,index:cls.index,year:student.year,group:cls.group
                 })
@@ -70,9 +71,26 @@ export const updateStudent = async(updatedstudent: any,studnetId:string)=>{
       throw error; // Optionally re-throw the error to propagate it further if needed
   }
 }
+
+export const deleteTeacher = async(teacherId:string)=>{
+  try {
+          await deleteDoc(doc(db, "Teachers",teacherId));
+      console.log("Teacher deleted successfully:");
+      return true; // Assuming you want to return the ID of the added Teacher
+  } catch (error) {
+      console.error("Error deleting Teacher:", error);
+      // Handle the error here, such as displaying a message to the user or logging it for further investigation
+      throw error; // Optionally re-throw the error to propagate it further if needed
+  }
+}
+
+
 export const deleteStudent = async ( student, classes) => {
   try {
     // Create an array of promises for each class update
+
+    const studentDocRef = doc(db, 'Students', student.id);
+    await updateDoc(studentDocRef, { isDeleted: true });
     const updatePromises = student.classesUIDs.map(async (cls) => {
       // Find the specific class and student details
       const classData = classes.find(clss => clss.id === cls.id);
@@ -92,6 +110,7 @@ export const deleteStudent = async ( student, classes) => {
 
       // Update the class document
       await updateDoc(classDocRef, {
+        
         students: arrayRemove({
           group: cls.group,
           id: student.id,
