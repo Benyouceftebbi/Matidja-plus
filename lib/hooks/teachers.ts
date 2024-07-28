@@ -158,12 +158,61 @@ export const addGroup=async(added:any)=>{
     
           batch.update(classDocRef, {
             groups: arrayUnion(rest)
-          })   
-        }
+          }) 
+          
+          const attendanceRef = collection(classDocRef, "Attendance");
+    
+        const currentDate = new Date();
+        const thisWeekStartDate = startOfWeek(currentDate, { weekStartsOn: 0 });
+        const nextWeekStartDate = addWeeks(thisWeekStartDate, 1);
+    
+        // Create attendance for this week
+        const thisWeekDate = getNextDayOfWeek(clss.day, thisWeekStartDate);
+        const formattedDateThisWeek = format(thisWeekDate, 'yyyy-MM-dd');
+        const dateTimeUIDThisWeek = `${formattedDateThisWeek}-${clss.group}`;
+    
+        // Add attendance document for this week
+        await setDoc(doc(attendanceRef, dateTimeUIDThisWeek), {
+          id: dateTimeUIDThisWeek,
+          start: clss.start,
+          end: clss.end,
+          group: clss.group,
+          attendanceList: []
+        });
+    
+        // Create attendance for next week
+        const nextWeekDate = getNextDayOfWeek(clss.day, nextWeekStartDate);
+        const formattedDateNextWeek = format(nextWeekDate, 'yyyy-MM-dd');
+        const dateTimeUIDNextWeek = `${formattedDateNextWeek}-${clss.group}`;
+    
+        // Add attendance document for next week
+        await setDoc(doc(attendanceRef, dateTimeUIDNextWeek), {
+          id: dateTimeUIDNextWeek,
+          start: clss.start,
+          end: clss.end,
+          group: clss.group,
+          attendanceList: []
+        });
+    
+        console.log(`Group and attendance added successfully for class ID: ${clss.classId}`);
+      } 
+        
     
         // Commit the batch
-        await batch.commit();    
-}
+        await batch.commit();  
+        
+    }
+
+
+
+
+
+
+
+       
+
+
+
 export const removeGroupFromDoc = async (clss,studentArray) => {
     try {
         // Reference to the specific document in the Groups collection

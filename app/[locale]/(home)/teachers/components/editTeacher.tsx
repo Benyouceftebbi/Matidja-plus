@@ -625,13 +625,16 @@ function getClassKey(cls) {
   });
 
 
+  const newArray: any[] = [];
   // Find added and updated classes
   for (const [key, dataClass] of dataClassMap) {
 
     if (!('group' in dataClass)) {
       const classId = classes.find(cls => cls.teacherName === teacher.name && cls.year === dataClass.year);
-      highestGroupNumber++;
+      
     
+      if (classId) {
+      highestGroupNumber++;
       result.added.push({
         ...dataClass,
         classId: classId.id,
@@ -639,7 +642,14 @@ function getClassKey(cls) {
         subject: classId.subject
       });
     }
-    else {
+    const yearExists = newArray.some((item) => item.year === dataClass.year);
+    if (!yearExists) {
+      newArray.push(dataClass);
+      console.log('guess what', newArray);
+      
+    }
+  }
+    else  {
       const teacherClass = teacherClasses.find(cls => cls.group === dataClass.group && cls.year === dataClass.year);
 
       
@@ -666,6 +676,7 @@ function getClassKey(cls) {
       }
     }
   }
+console.log('newwwwww',newArray);
 
   // Find removed classes
   for (const [id, teacherClass] of teacherClassMap) {
