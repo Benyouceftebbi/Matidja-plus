@@ -27,7 +27,7 @@ import {
     CardHeader,
     CardTitle,
   } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
@@ -61,6 +61,16 @@ import StudentForm from "./studentForm"
 import StudentPaymentSheet from "./studentPaymentSheet"
 import EditStudent from "./editStudent"
 import ChangeCard from "./change-card"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 type Status = 'accepted' | 'pending' | 'rejected';
 export type StudentSummary = {
   id: string;
@@ -142,7 +152,7 @@ interface DataTableDemoProps {
 
 
    const {toast}=useToast()
-    
+   const [openAlert,setOpenAlert]=React.useState(false)
     const columns: ColumnDef<any>[] = [
       {
         accessorKey: "index",
@@ -232,18 +242,7 @@ interface DataTableDemoProps {
                   {t('edit')} </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => openCardSheet(student)}>
                  New Card </DropdownMenuItem>
-                <DropdownMenuItem onClick={() =>{deleteStudent(student,classes), setStudents((prevStudents:any) =>
-      prevStudents.filter((std:any) => std.id !== student.id)
-
-    
-
-
-    )
-    toast({
-      title: "Student Deleted!",
-      description: `The student, ${student.name} Has been Deleted`,
-    });
-    }}>
+                <DropdownMenuItem onClick={() =>setOpenAlert(true)}>
           {t('delete')} </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -458,6 +457,34 @@ const orderedMonths = [
       </div>
       <EditStudent open={open} setOpen={setOpen}  student={student}/>
       <ChangeCard open={openCard} setOpen={setOpenCard}  student={student}/>
+      <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogTitle>Heads up!</AlertDialogTitle>
+      <AlertDialogDescription>
+Are you sure you want to delete student
+      </AlertDialogDescription>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel>Cancel</AlertDialogCancel>
+      <AlertDialogAction className={buttonVariants({ variant: "destructive" })}  onClick={() =>{deleteStudent(student,classes), setStudents((prevStudents:any) =>
+      prevStudents.filter((std:any) => std.id !== student.id)
+
+    
+
+
+    )
+    toast({
+      title: "Student Deleted!",
+      description: `The student, ${student.name} Has been Deleted`,
+    });
+    }}> 
+        
+        
+        Delete</AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
     </CardContent>
   </Card>
 

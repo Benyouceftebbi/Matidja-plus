@@ -1,5 +1,5 @@
 "use client"
-import React from 'react';
+import React, { useMemo,useCallback } from 'react';
 import {
   ChevronDownIcon,
 } from "@radix-ui/react-icons"
@@ -41,7 +41,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, Watch } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -65,8 +65,10 @@ import { UseFormReturn } from 'react-hook-form';
 import { useData } from "@/context/admin/fetchDataContext";
 
 import { generateTimeOptions } from '../../settings/components/open-days-table';
-import { setgroups } from 'process';
- 
+import { parse, isBefore, isAfter, isEqual } from 'date-fns';
+
+const parseTime = (timeString) => parse(timeString, 'HH:mm', new Date());
+
 interface FooterProps {
   formData: Teacher;
   form: UseFormReturn<any>; // Use the specific form type if available
@@ -172,16 +174,36 @@ const subjects = [
   "Architecture",
   "Environmental Science"
 ];
-/*const years=[
-  "1AM",
-  "2AM",
-  "3AM",
-  "4AM",
-  "1AS",
-  "2AS",
-  "3AS"
-]
-*/
+const {classes}=useData()
+const checkRoomAvailability = useCallback((newGroup: Group, allRooms: string[]): string[] => {
+  const { day, start, end } = newGroup;
+  console.log(day, start, end);
+  // Check if any of the required fields are missing
+  if (!day || !start || !end) {
+    return [];
+  }
+
+  
+  const newGroupStart = parseTime(start);
+  const newGroupEnd = parseTime(end);
+
+  return allRooms.filter((room) => {
+    return !classes.some((classItem) =>
+      classItem.groups.some((group) => {
+        const groupStart = parseTime(group.start);
+        const groupEnd = parseTime(group.end);
+
+        return group.day === day &&
+          group.room === room &&
+          ((isBefore(newGroupStart, groupEnd) && isAfter(newGroupEnd, groupStart)) ||
+           isEqual(newGroupStart, groupStart) || 
+           isEqual(newGroupEnd, groupEnd) ||
+           (isBefore(newGroupStart, groupEnd) && isEqual(newGroupEnd, groupEnd))
+          );
+      })
+    );
+  });
+}, [watch("classes")]);
 
 
 
@@ -488,7 +510,7 @@ const [schoolType, setSchoolType] = React.useState('');
                           </FormControl>
 
                           <SelectContent>
-                            {['room 1','room 2','room 3','room 4','room 5','room 6'].map((room) => (
+                            {checkRoomAvailability(watch(`classes.${index}`),['room 1','room 2','room 3','room 4','room 5','room 6']).map((room) => (
                               <SelectItem key={room} value={room}>
                                 {room}
                               </SelectItem>
@@ -726,4 +748,6 @@ function CheckIcon(props:any) {
             </svg>
           )
         }
+
+
         

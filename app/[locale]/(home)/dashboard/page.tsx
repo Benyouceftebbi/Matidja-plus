@@ -45,6 +45,7 @@ import { pdf } from "@react-pdf/renderer";
 import StudentInvoice from'../students/components/studentInvoice'
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/firebase/firebase-config";
+import { AutoComplete } from "@/components/ui/autocomplete";
 const frameworks = [
   {
     value: "next.js",
@@ -485,7 +486,7 @@ export default function Home() {
   </RadioGroup>
 )}
 </div>
-{currentClass &&(  <div className="mt-4 flex justify-end">
+{currentClass ?(  <div className="mt-4 flex justify-end">
     <Button
       onClick={() => {setStudentData(null);setCurrentClass(undefined);setCurrentClasses(undefined)}}
       variant='outline'
@@ -498,9 +499,28 @@ export default function Home() {
     >
       Confirm
     </Button>
-  </div>)}
+  </div>):(
+     <div className="mt-4 flex justify-end">
+     <Button
+       onClick={() => {setStudentData(null);setCurrentClass(undefined);setCurrentClasses(undefined)}}
+       variant='outline'
+     >
+       Reset
+     </Button>
+
+   </div>
+  )}
 </div>) :(<div className="bg-muted rounded-lg p-6 flex flex-col gap-4">
-  <ComboboxDemo open={open} setOpen={setOpen} onpressed={onpressed} array={students} value={studentData?.name}/>
+  <AutoComplete
+        options={students}
+        emptyMessage="No resulsts."
+        placeholder="Find something"
+
+        onpressed={onpressed}
+        value={studentData?.name}
+
+      />
+
                 <div className="flex items-center gap-4">
         
           <Avatar className="w-12 h-12 border">
@@ -542,6 +562,14 @@ export default function Home() {
                   <span className="text-muted-foreground">Classes:</span>
 
                 </div>
+                <div className="mt-4 flex justify-end">
+    <Button
+      onClick={() => {setStudentData(null);setCurrentClass(undefined);setCurrentClasses(undefined)}}
+      variant='outline'
+    >
+      Reset
+    </Button>
+    </div>
               </div> ) }
   </div>
   );

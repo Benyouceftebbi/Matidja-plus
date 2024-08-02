@@ -66,6 +66,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Label } from "@/components/ui/label";
+import { newlineChars } from 'pdf-lib';
 interface FooterProps {
   formData: Student;
   form: UseFormReturn<any>; // Use the specific form type if available
@@ -152,7 +153,6 @@ export default function StudentForm() {
   const getClassId = (subject:string, name:string,day:string,start:string,end:string)  => {
     const selectedClass = classes.find(cls => cls.subject === subject && cls.year=== watch('year') &&   cls.groups.some(group => group.stream.includes(watch('field'))) && cls.teacherName === name )
     const selectedGroup=selectedClass.groups.find( grp=> grp.day === day && grp.start === start && grp.end===end)
-    console.log(end);
     
     return selectedClass ? {id:selectedClass.id,index:selectedClass.students?selectedClass.students.length+1:1,group:selectedGroup.group}: {id:"",index:0,group:""};
   };
@@ -682,26 +682,53 @@ const Footer: React.FC<FooterProps> = ({ formData, form, isSubmitting,reset}) =>
 
       
     
-    await addStudent({...data,studentIndex:students.length+1})
+    const newData=await addStudent({...data,studentIndex:students.length+1})
     generateQrCode(data.id);
-    setStudents((prev: Student[]) => [...prev, {...data,id:data.id,student:data.name,studentIndex:prev.length+1}]);
+    setStudents((prev: Student[]) => {
+      // Create updated classes by mapping through the data.classes
+      const updatedClasses = data.classes.map(cls => {
+        const classUpdate = newData.classUpdates.find(update => update.classID === cls.id);
+        if (classUpdate) {
+          // Return the updated class with the new index
+          return { ...cls, index: classUpdate.newIndex };
+        }
+        // Return the existing class if no update is found
+        return cls;
+      });
+    
+      // Add the new student to the previous state
+      return [
+        ...prev,
+        {
+          ...data,
+          studentIndex:students.length+1,  // Basic student details
+          classes: updatedClasses  // Updated classes with new indexes
+        }
+      ];
+    });
+  
     setClasses((prev: any[]) =>
       prev.map((cls) => {
-        const matchingClass = data.classes.find((sls) => sls.id === cls.id);
+        // Find the matching class from the updatedClasses data
+        const matchingClass = newData.classUpdates.find((sls) => sls.classID === cls.id);
+    
         if (matchingClass) {
+          // Return the class with the updated students array
           return {
             ...cls,
             students: [
               ...cls.students,
               {
-                id: data.id,
-                name: data.name,
-                index: matchingClass.index,
-                year:data.year,group:cls.group
+                id: data.id, // The ID of the newly added student
+                name: data.name, // The name of the newly added student
+                index: matchingClass.newIndex, // The new index for the student
+                year: data.year, // The year of the student
+                group: cls.group // The group of the class
               },
             ],
           };
         }
+        // Return the class unchanged if no matching class was found
         return cls;
       })
     );

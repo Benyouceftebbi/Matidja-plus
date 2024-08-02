@@ -48,7 +48,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import CalendarDatePicker from './date-picker';
 import { Separator } from '@/components/ui/separator';
 import QRCode from 'qrcode'
-import { addStudent, addStudentToClass, changeStudentGroup, removeStudentFromClass, updateStudent } from '@/lib/hooks/students';
+import { addStudent, addStudentToClass, changeStudentGroup, getStudentCount, removeStudentFromClass, updateStudent } from '@/lib/hooks/students';
 import { LoadingButton } from '@/components/ui/loadingButton';
 import { format } from 'date-fns';
 import jsPDF from 'jspdf';
@@ -597,13 +597,14 @@ const Footer: React.FC<FooterProps> = ({ formData, form, isSubmitting,reset,stud
     if (added && Array.isArray(added)) {
       for (const cls of added) {
         const { group, id,  name,cs } = cls;
-  const index=classes.find(cls =>cls.id === id).students.length+1
-        
+        const studentCount = await getStudentCount(id);
+        const index = studentCount + 1;
+
        setClasses(prevClasses => 
           prevClasses.map(cls =>
       cls.id === id ? {
         ...cls,
-        students: [...cls.students, { group, id,cs, index:cls.students.length+1, name, year:student.year }]
+        students: [...cls.students, { group, id,cs, index:index, name, year:student.year }]
       } : cls
     )
   );
@@ -613,14 +614,14 @@ const Footer: React.FC<FooterProps> = ({ formData, form, isSubmitting,reset,stud
 std.id === student.id ? {
   ...std,
   classesUIDs: [...std.classesUIDs, { id:id,group:group }],
-  classes:[...std.classes,{...cls}]
+  classes:[...std.classes,{...cls,index:index}]
 } : std
 )
 );
-await addStudentToClass({...cls,index:index,year:student.year,studentName:student.name,studentID:student.id},cls.id,student.id)
-  console.log({...cls,index:index,year:student.year,studentName:student.name,studentID:student.id},cls.id,student.id);
-  
 
+
+  
+await addStudentToClass({...cls,index:index,year:student.year,studentName:student.name,studentID:student.id},cls.id,student.id)
 
       }
     }
