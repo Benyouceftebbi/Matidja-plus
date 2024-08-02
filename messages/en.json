@@ -480,10 +480,11 @@
   "Balance": "Balance",
   "Islamic_Education": "Islamic Education",
   "Arabic_Language": "Arabic Language",
-    "French_Language": "French Language ",
-    "Social_Sciences": "Social Sciences",
-    "Mathematics": "Mathematics",
-    "Scientific_Activities": "Scientific Activities",
-    "Artistic_Education_and_Technological_Alertness": "Artistic Education and Technological Alertness"
-  
+  "French_Language": "French Language ",
+  "Social_Sciences": "Social Sciences",
+  "Mathematics": "Mathematics",
+  "Scientific_Activities": "Scientific Activities",
+  "Artistic_Education_and_Technological_Alertness": "Artistic Education and Technological Alertness",
+  "Middle School": "Middle School",
+  "High School": "High School"
 }

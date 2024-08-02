@@ -1,5 +1,5 @@
 import { db } from "@/firebase/firebase-config"
-import { addDoc,arrayRemove,arrayUnion,collection, deleteDoc, doc, getDoc, increment, setDoc, updateDoc, writeBatch } from "firebase/firestore"
+import { addDoc,arrayRemove,arrayUnion,collection, deleteDoc, doc, getDoc, increment, runTransaction, setDoc, updateDoc, writeBatch } from "firebase/firestore"
 import { getDownloadURL, ref, uploadBytes, uploadString } from "firebase/storage";
 import { storage } from "@/firebase/firebase-config";
 import { StudentSchema,Student } from "@/validators/auth";
@@ -38,30 +38,32 @@ export async function uploadAndLinkToCollection(
     return downloadUrl
   }
   export const addStudent = async (student: Student) => {
-    const batch = writeBatch(db); // Initialize a batch operation
-  
     try {
-      // Add the student document
-      await setDoc(doc(db, "Students", student.id), student);
-    
+      // Add the student document outside of the transaction
+      const studentRef = doc(db, "Students", student.id);
+      await setDoc(studentRef, student);
+  
       // Upload the student's photo if it exists
       if (student.photo) {
         await uploadAndLinkToCollection(student.photo, 'Students', student.id, 'photo');
       }
   
-      // Collect class updates
-      const classUpdates = await Promise.all(
-        student.classes.map(async (cls) => {
-          const docRef = doc(db, 'Groups', cls.id);
-          const docSnap = await getDoc(docRef);
-    
-          if (docSnap.exists()) {
-            // Get the current length of the students array and calculate the new index
-            const students = docSnap.data()?.students || [];
-            const newIndex = students.length + 1;
-    
-            // Queue up the update in the batch
-            batch.update(docRef, {
+      // Use a transaction to ensure atomic updates to class documents
+      const result = await runTransaction(db, async (transaction) => {
+        const classUpdates: { classID: string, newIndex: number }[] = [];
+  
+        for (const cls of student.classes) {
+          const classRef = doc(db, 'Groups', cls.id);
+          const classDoc = await transaction.get(classRef);
+  
+          if (classDoc.exists()) {
+            const classData = classDoc.data();
+            const students = classData.students || [];
+            const highestIndex = students.reduce((max, student) => Math.max(max, student.index || 0), 0);
+            const newIndex = highestIndex + 1;
+  
+            // Update the class document within the transaction
+            transaction.update(classRef, {
               students: arrayUnion({
                 id: student.id,
                 name: student.name,
@@ -71,23 +73,18 @@ export async function uploadAndLinkToCollection(
               })
             });
   
-            // Return class-specific data
-            return { classID: cls.id, newIndex };
+            classUpdates.push({ classID: cls.id, newIndex });
           } else {
             console.log('No such document for class ID:', cls.id);
-            return null; // Return null if the document does not exist
+            // Handle missing class documents if necessary
           }
-        })
-      );
+        }
   
-      // Commit the batch operation
-      await batch.commit();
+        // Return class updates for post-transaction processing
+        return { studentId: student.id, classUpdates };
+      });
   
-      // Filter out null values in case some documents were not found
-      const filteredClassUpdates = classUpdates.filter(update => update !== null);
-    
-      // Optionally return the class updates or just the student ID
-      return { studentId: student.id, classUpdates: filteredClassUpdates };
+      return result;
     } catch (error) {
       console.error("Error adding Student:", error);
       // Handle the error here
@@ -237,14 +234,26 @@ export async function markAttendance(classId,attendanceId,student){
     })
   }
   export async function getStudentCount(classId: string): Promise<number> {
-    const classDoc = doc(db, 'Groups', classId);
-    const classSnapshot = await getDoc(classDoc);
+    const classRef = doc(db, 'Groups', classId);
   
-    if (classSnapshot.exists()) {
-      const classData = classSnapshot.data();
-      // Assuming 'students' is an array
-      return classData.students ? classData.students.length : 0;
-    } else {
-      throw new Error('Class not found');
+    try {
+      // Run a transaction to ensure atomicity
+      const newStudentIndex = await runTransaction(db, async (transaction) => {
+        const classDoc = await transaction.get(classRef);
+        if (!classDoc.exists()) {
+          throw new Error('Class not found');
+        }
+  
+        const classData = classDoc.data();
+        const highestIndex = classData.students.reduce((max, student) => Math.max(max, student.index || 0), 0);
+        const currentStudentCount = highestIndex + 1
+  
+        return currentStudentCount;
+      });
+  
+      return newStudentIndex + 1; // Adding 1 to get the new index
+    } catch (error) {
+      console.error('Error fetching student count:', error);
+      throw error;
     }
   }

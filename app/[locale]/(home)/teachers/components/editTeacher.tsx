@@ -66,7 +66,7 @@ import { useData } from "@/context/admin/fetchDataContext";
 
 import { generateTimeOptions } from '../../settings/components/open-days-table';
 import { ScrollArea } from '@/components/ui/scroll-area';
- 
+import { useTranslations } from 'next-intl';
 interface FooterProps {
   formData: Teacher;
   teacher:any;
@@ -153,30 +153,22 @@ const handleYearToggle = (field:string) => {
 
 const subjects = [
   "Select Option",
-  "Mathematics",
-  "Physics",
-  "Chemistry",
-  "Biology",
-  "Geography",
-  "History",
-  "Philosophy",
-  "Arabic",
-  "French",
-  "English",
-  "Islamic Education",
-  "Technology",
-  "Computer Science",
-  "Art",
-  "Physical Education",
-  "Economics",
-  "German",
-  "Spanish",
-  "Law",
-  "Business Studies",
-  "Social Sciences",
-  "Engineering",
-  "Architecture",
-  "Environmental Science"
+  "قانون",
+  "اقتصاد",
+  "محاسبة",
+  "اسبانية",
+  "المانية",
+  "ايطالية",
+  "رياضيات",
+  "علوم",
+  "فيزياء",
+  "العلوم الاسلامية",
+  "تاريخ وجغرافيا",
+  "هندسة مدنية",
+  "هندسة ميكانيكية",
+  "هندسة الطرائق",
+  "الهندسة الكهربائية",
+  "فلسفة"
 ];
 const years=[
   "1AM",
@@ -475,7 +467,7 @@ const years=[
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end">
-      {['Scientific Stream', 'Literature and Philosophy', 'Literature and Languages', 'Economics', 'Mathematics and Technology', 'Mathematics'].map(e => (
+    {['متوسط','علوم تجريبية', 'تقني رياضي', 'رياضيات', 'تسيير واقتصاد ', 'لغات اجنبية ', 'اداب وفلسفة'].map(e => (
         <DropdownMenuItem
           key={e}
           value={e}

@@ -259,7 +259,7 @@ export default function StudentForm() {
     qrScanner.current = new QrScanner(videoRef.current!, handleQrScan, {
       highlightScanRegion: true,
       overlay: highlightCodeOutlineRef.current!,
-      maxScansPerSecond:0.5,
+      maxScansPerSecond:1,
     });
     await qrScanner.current.start();
     setShowingQrScanner(true);
@@ -409,7 +409,15 @@ export default function StudentForm() {
       <FormLabel className="text-right">Year</FormLabel>
       <FormControl>
       <Select
-   onValueChange={field.onChange}
+   onValueChange={(e) => {
+    // Call the onChange handler with the new value
+    field.onChange(e);
+
+    // Check the value of 'year' and update 'field' if needed
+    if (["1AM", "2AM", "3AM", "4AM"].includes(e)) {
+      setValue("field", "متوسط");
+    }
+  }}
    defaultValue={field.value}
               >
                                  <SelectTrigger
@@ -435,7 +443,7 @@ export default function StudentForm() {
 />
 
 
-<FormField
+{!["1AM","2AM","3AM","4AM"].includes(watch('year')) && (<FormField
   control={control}
   name="field"
   render={({ field }) => (
@@ -466,7 +474,7 @@ export default function StudentForm() {
       <FormMessage />
     </FormItem>
   )}
-/>
+/>)}
   
 
     <FormField
@@ -680,64 +688,65 @@ const Footer: React.FC<FooterProps> = ({ formData, form, isSubmitting,reset}) =>
   const {toast}=useToast()
   const onSubmit = async(data:any) => {
 
+      console.log(data);
       
     
-    const newData=await addStudent({...data,studentIndex:students.length+1})
-    generateQrCode(data.id);
-    setStudents((prev: Student[]) => {
-      // Create updated classes by mapping through the data.classes
-      const updatedClasses = data.classes.map(cls => {
-        const classUpdate = newData.classUpdates.find(update => update.classID === cls.id);
-        if (classUpdate) {
-          // Return the updated class with the new index
-          return { ...cls, index: classUpdate.newIndex };
-        }
-        // Return the existing class if no update is found
-        return cls;
-      });
+    // const newData=await addStudent({...data,studentIndex:students.length+1})
+    // generateQrCode(data.id);
+    // setStudents((prev: Student[]) => {
+    //   // Create updated classes by mapping through the data.classes
+    //   const updatedClasses = data.classes.map(cls => {
+    //     const classUpdate = newData.classUpdates.find(update => update.classID === cls.id);
+    //     if (classUpdate) {
+    //       // Return the updated class with the new index
+    //       return { ...cls, index: classUpdate.newIndex };
+    //     }
+    //     // Return the existing class if no update is found
+    //     return cls;
+    //   });
     
-      // Add the new student to the previous state
-      return [
-        ...prev,
-        {
-          ...data,
-          studentIndex:students.length+1,  // Basic student details
-          classes: updatedClasses  // Updated classes with new indexes
-        }
-      ];
-    });
+    //   // Add the new student to the previous state
+    //   return [
+    //     ...prev,
+    //     {
+    //       ...data,
+    //       studentIndex:students.length+1,  // Basic student details
+    //       classes: updatedClasses  // Updated classes with new indexes
+    //     }
+    //   ];
+    // });
   
-    setClasses((prev: any[]) =>
-      prev.map((cls) => {
-        // Find the matching class from the updatedClasses data
-        const matchingClass = newData.classUpdates.find((sls) => sls.classID === cls.id);
+    // setClasses((prev: any[]) =>
+    //   prev.map((cls) => {
+    //     // Find the matching class from the updatedClasses data
+    //     const matchingClass = newData.classUpdates.find((sls) => sls.classID === cls.id);
     
-        if (matchingClass) {
-          // Return the class with the updated students array
-          return {
-            ...cls,
-            students: [
-              ...cls.students,
-              {
-                id: data.id, // The ID of the newly added student
-                name: data.name, // The name of the newly added student
-                index: matchingClass.newIndex, // The new index for the student
-                year: data.year, // The year of the student
-                group: cls.group // The group of the class
-              },
-            ],
-          };
-        }
-        // Return the class unchanged if no matching class was found
-        return cls;
-      })
-    );
+    //     if (matchingClass) {
+    //       // Return the class with the updated students array
+    //       return {
+    //         ...cls,
+    //         students: [
+    //           ...cls.students,
+    //           {
+    //             id: data.id, // The ID of the newly added student
+    //             name: data.name, // The name of the newly added student
+    //             index: matchingClass.newIndex, // The new index for the student
+    //             year: data.year, // The year of the student
+    //             group: cls.group // The group of the class
+    //           },
+    //         ],
+    //       };
+    //     }
+    //     // Return the class unchanged if no matching class was found
+    //     return cls;
+    //   })
+    // );
   
-    nextStep()
-    toast({
-      title: "Student Added!",
-      description: `The student, ${data.name} added successfully`,
-    });
+    // nextStep()
+    // toast({
+    //   title: "Student Added!",
+    //   description: `The student, ${data.name} added successfully`,
+    // });
     
   };
 

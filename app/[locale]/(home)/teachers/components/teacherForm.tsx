@@ -66,6 +66,7 @@ import { useData } from "@/context/admin/fetchDataContext";
 
 import { generateTimeOptions } from '../../settings/components/open-days-table';
 import { parse, isBefore, isAfter, isEqual } from 'date-fns';
+import { useTranslations } from 'next-intl';
 
 const parseTime = (timeString) => parse(timeString, 'HH:mm', new Date());
 
@@ -107,8 +108,7 @@ export default function TeacherForm() {
 
   });
   
-
-  
+  const t=useTranslations()
   const handleGroupChange = (
     index: number, 
     field: 'day' | 'name' | 'id' | 'subject' | 'time' | 'quota' | 'start' | 'end' | 'stream', 
@@ -149,30 +149,22 @@ const handleYearToggle = (field:string) => {
 
 const subjects = [
   "Select Option",
-  "Mathematics",
-  "Physics",
-  "Chemistry",
-  "Biology",
-  "Geography",
-  "History",
-  "Philosophy",
-  "Arabic",
-  "French",
-  "English",
-  "Islamic Education",
-  "Technology",
-  "Computer Science",
-  "Art",
-  "Physical Education",
-  "Economics",
-  "German",
-  "Spanish",
-  "Law",
-  "Business Studies",
-  "Social Sciences",
-  "Engineering",
-  "Architecture",
-  "Environmental Science"
+  "قانون",
+  "اقتصاد",
+  "محاسبة",
+  "اسبانية",
+  "المانية",
+  "ايطالية",
+  "رياضيات",
+  "علوم",
+  "فيزياء",
+  "العلوم الاسلامية",
+  "تاريخ وجغرافيا",
+  "هندسة مدنية",
+  "هندسة ميكانيكية",
+  "هندسة الطرائق",
+  "الهندسة الكهربائية",
+  "فلسفة"
 ];
 const {classes}=useData()
 const checkRoomAvailability = useCallback((newGroup: Group, allRooms: string[]): string[] => {
@@ -303,8 +295,8 @@ const [schoolType, setSchoolType] = React.useState('');
                   <SelectValue placeholder={"Select School Type"} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="middle">Middle School</SelectItem>
-                  <SelectItem value="high">High School</SelectItem>
+                  <SelectItem value="middle">{t('Middle School')}</SelectItem>
+                  <SelectItem value="high">{t('High School')}</SelectItem>
                 </SelectContent>
               </Select>
             </FormControl>
@@ -529,14 +521,12 @@ const [schoolType, setSchoolType] = React.useState('');
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end">
-      {['Scientific Stream', 'Literature and Philosophy', 'Literature and Languages', 'Economics', 'Mathematics and Technology', 'Mathematics'].map(e => (
+    {['متوسط','علوم تجريبية', 'تقني رياضي', 'رياضيات', 'تسيير واقتصاد ', 'لغات اجنبية ', 'اداب وفلسفة'].map(e => (
         <DropdownMenuItem
           key={e}
           value={e}
           className={`flex items-center ${group.stream.includes(e) ? 'selected' : ''}`}
-          onClick={() => handleGroupChange(index, 'stream', e) } 
-          
-        >
+          onClick={() => handleGroupChange(index, 'stream', e) } >
           <span className="mr-2">{e}</span>
           {group.stream.includes(e) && <CheckIcon className="h-4 w-4 text-green-500" />}
         </DropdownMenuItem>
