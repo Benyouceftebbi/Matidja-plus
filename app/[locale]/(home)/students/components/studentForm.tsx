@@ -135,7 +135,8 @@ export default function StudentForm() {
       id:null,
       studentIndex: students.length + 1,
       classes:[],
-      classesUIDs:[]
+      classesUIDs:[],
+      
     }
   });
 
@@ -525,7 +526,7 @@ export default function StudentForm() {
 ) : (
   <div className="w-full h-full">
     <Table>
-      <TableCaption>        <Button type='button' size="sm" variant="ghost" className="gap-1 w-full"  onClick={()=>appendClass({id:'',name:'',subject:'',time:''})}>
+      <TableCaption>        <Button type='button' size="sm" variant="ghost" className="gap-1 w-full"  onClick={()=>appendClass({id:'',name:'',subject:'',time:'',cs:'false'})}>
                       <PlusCircle className="h-3.5 w-3.5" />
                       {t('add group')}</Button></TableCaption>
       <TableHeader>
