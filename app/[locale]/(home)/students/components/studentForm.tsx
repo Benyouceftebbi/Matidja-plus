@@ -581,11 +581,18 @@ export default function StudentForm() {
       <SelectContent>
       {invoice.subject && invoice.name? ( <SelectGroup>
           <SelectLabel>{t('times')}</SelectLabel>
-          {(classes.find(cls => cls.subject === invoice.subject && cls.year=== watch('year') &&   cls.groups.map(group => group.stream.includes(watch('field'))) && cls.teacherName === invoice.name ))?.groups?.map((cls,index) => (
-                          <SelectItem key={index} value={JSON.stringify(`${cls.day},${cls.start}-${cls.end}`)}>
-                            {t(`${cls.day}`)},{cls.start}-{cls.end}
-                          </SelectItem>
-                        ))}
+          {classes.find(cls => 
+    cls.subject === invoice.subject && 
+    cls.year === watch('year') && 
+    cls.teacherName === invoice.name
+  )?.groups
+    .filter(group => group.stream.includes(watch('field'))) // Filter groups based on stream.includes
+    .map((group, index) => (
+      <SelectItem key={index} value={JSON.stringify(`${group.day},${group.start}-${group.end}`)}>
+        {t(`${group.day}`)},{group.start}-{group.end}
+      </SelectItem>
+    ))
+}
         </SelectGroup>):(<p className="text-sm text-muted-foreground">Select Subject and name first</p>)}
       </SelectContent>
     </Select></TableCell>
