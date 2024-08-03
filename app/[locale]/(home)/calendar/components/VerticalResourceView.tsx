@@ -139,8 +139,10 @@ const VerticalResourceView = () => {
           }
    
           const targetDayAbbreviation = dayToWeekDay[day];
+                      
                        
           if (!targetDayAbbreviation) {
+            console.log("dddddd",classId);
             throw new Error("Invalid day provided");
           }
           const firstDayOfMonth = new Date(year, month, 1);
