@@ -48,7 +48,7 @@ const t=useTranslations()
               : 'text-muted-foreground hover:text-foreground foreground transition-colors'
           }`}
         >
-          Calendar </Link>
+          {t('calendar')} </Link>
         <Link
           href="/students"
           className={`${pathname=== '/students' ?'text-black-500 dark:text-white ' : 'text-muted-foreground hover:text-foreground foreground transition-colors'}`}

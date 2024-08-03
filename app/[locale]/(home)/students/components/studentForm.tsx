@@ -252,6 +252,7 @@ export default function StudentForm() {
       highlightScanRegion: true,
       overlay: highlightCodeOutlineRef.current!,
       maxScansPerSecond:1,
+      preferredCamera:'user'
     });
     await qrScanner.current.start();
     setShowingQrScanner(true);
@@ -286,7 +287,7 @@ export default function StudentForm() {
       <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
   <AlertDialogContent>
     <AlertDialogHeader>
-      <AlertDialogTitle>Heads up!</AlertDialogTitle>
+      <AlertDialogTitle>{t('heads-up')}</AlertDialogTitle>
       <AlertDialogDescription>
  {alertText}
       </AlertDialogDescription>
@@ -489,7 +490,7 @@ export default function StudentForm() {
  {!watch('photo') ? (
         <div className="w-[300px] items-center justify-center flex flex-col">
           
-          <Camera ref={camera} aspectRatio={16/9} errorMessages={{noCameraAccessible:"no Cemera"}} />
+          <Camera ref={camera} aspectRatio={16/9} errorMessages={{noCameraAccessible:"no Cemera"}}  facingMode='environment' />
           <Button
             onClick={() => {
               if (camera.current) {
