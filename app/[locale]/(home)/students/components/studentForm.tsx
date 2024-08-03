@@ -63,6 +63,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { useTranslations } from 'next-intl';
+import { addStudent } from '@/lib/hooks/students';
 interface FooterProps {
   formData: Student;
   form: UseFormReturn<any>; // Use the specific form type if available
@@ -677,65 +678,65 @@ const Footer: React.FC<FooterProps> = ({ formData, form, isSubmitting,reset}) =>
   const {toast}=useToast()
   const onSubmit = async(data:any) => {
 
-      console.log(data);
+   
       
     
-    // const newData=await addStudent({...data,studentIndex:students.length+1})
-    // generateQrCode(data.id);
-    // setStudents((prev: Student[]) => {
-    //   // Create updated classes by mapping through the data.classes
-    //   const updatedClasses = data.classes.map(cls => {
-    //     const classUpdate = newData.classUpdates.find(update => update.classID === cls.id);
-    //     if (classUpdate) {
-    //       // Return the updated class with the new index
-    //       return { ...cls, index: classUpdate.newIndex };
-    //     }
-    //     // Return the existing class if no update is found
-    //     return cls;
-    //   });
+    const newData=await addStudent({...data,studentIndex:students.length+1})
+    generateQrCode(data.id);
+    setStudents((prev: Student[]) => {
+      // Create updated classes by mapping through the data.classes
+      const updatedClasses = data.classes.map(cls => {
+        const classUpdate = newData.classUpdates.find(update => update.classID === cls.id);
+        if (classUpdate) {
+          // Return the updated class with the new index
+          return { ...cls, index: classUpdate.newIndex };
+        }
+        // Return the existing class if no update is found
+        return cls;
+      });
     
-    //   // Add the new student to the previous state
-    //   return [
-    //     ...prev,
-    //     {
-    //       ...data,
-    //       studentIndex:students.length+1,  // Basic student details
-    //       classes: updatedClasses  // Updated classes with new indexes
-    //     }
-    //   ];
-    // });
+      // Add the new student to the previous state
+      return [
+        ...prev,
+        {
+          ...data,
+          studentIndex:students.length+1,  // Basic student details
+          classes: updatedClasses  // Updated classes with new indexes
+        }
+      ];
+    });
   
-    // setClasses((prev: any[]) =>
-    //   prev.map((cls) => {
-    //     // Find the matching class from the updatedClasses data
-    //     const matchingClass = newData.classUpdates.find((sls) => sls.classID === cls.id);
+    setClasses((prev: any[]) =>
+      prev.map((cls) => {
+        // Find the matching class from the updatedClasses data
+        const matchingClass = newData.classUpdates.find((sls) => sls.classID === cls.id);
     
-    //     if (matchingClass) {
-    //       // Return the class with the updated students array
-    //       return {
-    //         ...cls,
-    //         students: [
-    //           ...cls.students,
-    //           {
-    //             id: data.id, // The ID of the newly added student
-    //             name: data.name, // The name of the newly added student
-    //             index: matchingClass.newIndex, // The new index for the student
-    //             year: data.year, // The year of the student
-    //             group: cls.group // The group of the class
-    //           },
-    //         ],
-    //       };
-    //     }
-    //     // Return the class unchanged if no matching class was found
-    //     return cls;
-    //   })
-    // );
+        if (matchingClass) {
+          // Return the class with the updated students array
+          return {
+            ...cls,
+            students: [
+              ...cls.students,
+              {
+                id: data.id, // The ID of the newly added student
+                name: data.name, // The name of the newly added student
+                index: matchingClass.newIndex, // The new index for the student
+                year: data.year, // The year of the student
+                group: cls.group // The group of the class
+              },
+            ],
+          };
+        }
+        // Return the class unchanged if no matching class was found
+        return cls;
+      })
+    );
   
-    // nextStep()
-    // toast({
-    //   title: "Student Added!",
-    //   description: `The student, ${data.name} added successfully`,
-    // });
+    nextStep()
+    toast({
+      title: "Student Added!",
+      description: `The student, ${data.name} added successfully`,
+    });
     
   };
 
