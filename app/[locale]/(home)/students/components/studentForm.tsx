@@ -42,14 +42,11 @@ import {
 } from "@/components/ui/select"
 import { Student, StudentSchema } from '@/validators/auth';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import CalendarDatePicker from './date-picker';
 import { Separator } from '@/components/ui/separator';
 import QRCode from 'qrcode'
-import { addStudent } from '@/lib/hooks/students';
 import { LoadingButton } from '@/components/ui/loadingButton';
-import { format } from 'date-fns';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { UseFormReturn } from 'react-hook-form';
@@ -65,8 +62,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { Label } from "@/components/ui/label";
-import { newlineChars } from 'pdf-lib';
+import { useTranslations } from 'next-intl';
 interface FooterProps {
   formData: Student;
   form: UseFormReturn<any>; // Use the specific form type if available
@@ -74,33 +70,25 @@ interface FooterProps {
   reset: UseFormReturn<any>['reset']; // Adding reset function from useForm
 }
 
-const subjects =['Scientific Stream', 'Literature and Philosophy', 'Literature and Languages', 'Economics', 'Mathematics and Technology', 'Mathematics']
+const subjects =['متوسط','علوم تجريبية', 'تقني رياضي', 'رياضيات', 'تسيير واقتصاد ', 'لغات اجنبية ', 'اداب وفلسفة']
 const classess = [
-  "Select Option",
-  "Mathematics",
-  "Physics",
-  "Chemistry",
-  "Biology",
-  "Geography",
-  "History",
-  "Philosophy",
-  "Arabic",
-  "French",
-  "English",
-  "Islamic Education",
-  "Technology",
-  "Computer Science",
-  "Art",
-  "Physical Education",
-  "Economics",
-  "German",
-  "Spanish",
-  "Law",
-  "Business Studies",
-  "Social Sciences",
-  "Engineering",
-  "Architecture",
-  "Environmental Science"
+ "Select Option",
+  "قانون",
+  "اقتصاد",
+  "محاسبة",
+  "اسبانية",
+  "المانية",
+  "ايطالية",
+  "رياضيات",
+  "علوم",
+  "فيزياء",
+  "العلوم الاسلامية",
+  "تاريخ وجغرافيا",
+  "هندسة مدنية",
+  "هندسة ميكانيكية",
+  "هندسة الطرائق",
+  "الهندسة الكهربائية",
+  "فلسفة"
 ];
 const steps = [
   { label: "Step 1" },
@@ -133,6 +121,7 @@ const isFirestoreId = (id) => {
 export default function StudentForm() {
   const camera = useRef<null | { takePhoto: () => string }>(null);
   const {setStudents,teachers,classes,students}=useData()
+  const t=useTranslations()
   const form = useForm<any>({
     // resolver: zodResolver(StudentSchema),
     defaultValues:{
@@ -267,15 +256,15 @@ export default function StudentForm() {
   return (
     <Dialog >
       <DialogTrigger asChild>
-        <Button onClick={()=>{       form.setValue('classes',[]);reset()}}>Create student</Button>
+        <Button onClick={()=>{       form.setValue('classes',[]);reset()}}>{t('Add student')}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[800px]">
       <Form {...form} >
       <form >
         <DialogHeader>
-          <DialogTitle>Add Student</DialogTitle>
+          <DialogTitle>{t('Add student')}</DialogTitle>
           <DialogDescription>
-            Add your Student here. Click save when you're done.
+            {t('Add your Student here. Click save when you are done.')}
           </DialogDescription>
         </DialogHeader>
 
@@ -300,8 +289,8 @@ export default function StudentForm() {
       </AlertDialogDescription>
     </AlertDialogHeader>
     <AlertDialogFooter>
-      <AlertDialogCancel>Cancel</AlertDialogCancel>
-      <AlertDialogAction>Continue</AlertDialogAction>
+      <AlertDialogCancel>{t('Cancel')}</AlertDialogCancel>
+      <AlertDialogAction>{t('Continue')}</AlertDialogAction>
     </AlertDialogFooter>
   </AlertDialogContent>
 </AlertDialog>
@@ -317,7 +306,7 @@ export default function StudentForm() {
      onClick={stopScanner}
          className="mt-4 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800"
        >
-         Stop QR Scanner
+         {t('Stop QR Scanner')}
        </button>
 
    ) : (
@@ -326,7 +315,7 @@ export default function StudentForm() {
      type='button'
      className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
    >
-     Start QR Scanner
+     {t('Start QR Scanner')}
    </button>
    )}
  </div>
@@ -341,7 +330,7 @@ export default function StudentForm() {
                   name="name"
                   render={({ field }) => (
                     <FormItem className="grid grid-cols-4 items-center gap-4">
-                      <FormLabel className="text-right">Name</FormLabel>
+                      <FormLabel className="text-right">{t('Name')}</FormLabel>
                       <FormControl><Input id="name"  className="col-span-3"  {...field}/></FormControl>
 
                       
@@ -355,7 +344,7 @@ export default function StudentForm() {
               name="birthdate"
               render={({ field }) => (
                 <FormItem className="grid grid-cols-4 items-center gap-4">
-                  <FormLabel className="text-right">Birthdate</FormLabel>
+                  <FormLabel className="text-right">{t('Birthdate')}</FormLabel>
                   <FormControl>  
                     <CalendarDatePicker
             {...field}
@@ -380,7 +369,7 @@ export default function StudentForm() {
               name="birthplace"
               render={({ field }) => (
                 <FormItem className="grid grid-cols-4 items-center gap-4">
-                  <FormLabel className="text-right">Birthplace</FormLabel>
+                  <FormLabel className="text-right">{t('Birthplace')}</FormLabel>
                   <FormControl><Input id="birthplace" className="col-span-3" {...field} /></FormControl>
                   
                 </FormItem>
@@ -393,7 +382,7 @@ export default function StudentForm() {
               name="school"
               render={({ field }) => (
                 <FormItem className="grid grid-cols-4 items-center gap-4">
-                  <FormLabel className="text-right">School</FormLabel>
+                  <FormLabel className="text-right">{t('School')}</FormLabel>
                   <FormControl><Input id="school" className="col-span-3" {...field} /></FormControl>
                   
                 </FormItem>
@@ -406,7 +395,7 @@ export default function StudentForm() {
   name="year"
   render={({ field }) => (
     <FormItem className="grid grid-cols-4 items-center gap-4">
-      <FormLabel className="text-right">Year</FormLabel>
+      <FormLabel className="text-right">{t("Year")}</FormLabel>
       <FormControl>
       <Select
    onValueChange={(e) => {
@@ -448,7 +437,7 @@ export default function StudentForm() {
   name="field"
   render={({ field }) => (
     <FormItem className="grid grid-cols-4 items-center gap-4">
-      <FormLabel className="text-right">field</FormLabel>
+      <FormLabel className="text-right">{t('field')}</FormLabel>
       <FormControl>
       <Select
    onValueChange={field.onChange}
@@ -482,7 +471,7 @@ export default function StudentForm() {
               name="phoneNumber"
               render={({ field }) => (
                 <FormItem className="grid grid-cols-4 items-center gap-4">
-                  <FormLabel className="text-right">Phone Number</FormLabel>
+                  <FormLabel className="text-right">{t('Phone Number')}</FormLabel>
                   <FormControl><Input id="phoneNumber" className="col-span-3" {...field} /></FormControl>
                   
                 </FormItem>
@@ -511,14 +500,14 @@ export default function StudentForm() {
             variant="link"
             type='button'
           >
-            Take photo
+            {t('Take photo')}
           </Button>
         </div>
       ) : (
         <>
           <img src={watch('photo')?watch('photo'):null} alt="Taken photo"  className='w-[300px]'/>
           <Button onClick={() =>   setValue('photo',null)} variant="link" type='button'>
-            Retake photo
+            {t('Retake photo')}
           </Button>
         </>
       )}
@@ -530,14 +519,14 @@ export default function StudentForm() {
     <Table>
       <TableCaption>        <Button type='button' size="sm" variant="ghost" className="gap-1 w-full"  onClick={()=>appendClass({id:'',name:'',subject:'',time:''})}>
                       <PlusCircle className="h-3.5 w-3.5" />
-                      add group</Button></TableCaption>
+                      {t('add group')}</Button></TableCaption>
       <TableHeader>
         <TableRow>
-        <TableHead>Subject</TableHead>
-          <TableHead >Name</TableHead>
-          <TableHead>Time</TableHead>
-          <TableHead>CS</TableHead>
-          <TableHead>Action</TableHead>
+        <TableHead>{t('Subject')}</TableHead>
+          <TableHead>{t("Name")}</TableHead>
+          <TableHead>{t("Time")}</TableHead>
+          <TableHead>{t('CS')}</TableHead>
+          <TableHead>{t('Action')}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -550,7 +539,7 @@ export default function StudentForm() {
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-        <SelectLabel>Subjects</SelectLabel>
+        <SelectLabel>{t('Subjects')}</SelectLabel>
                     {classess.map(subject => (
                       <SelectItem key={subject} value={subject}>
                         {subject}
@@ -566,7 +555,7 @@ export default function StudentForm() {
       </SelectTrigger>
       <SelectContent>
       {invoice.subject? ( <SelectGroup>
-          <SelectLabel>Groups</SelectLabel>
+          <SelectLabel>{t('Groups')}</SelectLabel>
           {Array.from(new Set(classes
                         .filter(cls => cls.subject === invoice.subject && cls.year=== watch('year') &&   cls.groups.some(group => group.stream.includes(watch('field'))))
                       )).map(cls => (
@@ -583,7 +572,7 @@ export default function StudentForm() {
       </SelectTrigger>
       <SelectContent>
       {invoice.subject && invoice.name? ( <SelectGroup>
-          <SelectLabel>times</SelectLabel>
+          <SelectLabel>{t('times')}</SelectLabel>
           {(classes.find(cls => cls.subject === invoice.subject && cls.year=== watch('year') &&   cls.groups.some(group => group.stream.includes(watch('field'))) && cls.teacherName === invoice.name ))?.groups?.map((cls,index) => (
                           <SelectItem key={index} value={JSON.stringify(`${cls.day},${cls.start}-${cls.end}`)}>
                             {cls.day},{cls.start}-{cls.end}
@@ -610,7 +599,7 @@ export default function StudentForm() {
       </SelectContent>
     </Select></TableCell>
     <TableCell>   
-       <Button  type="button" variant="destructive" onClick={()=>removeClass(index)}>remove</Button></TableCell>
+       <Button  type="button" variant="destructive" onClick={()=>removeClass(index)}>{t('remove')}</Button></TableCell>
 
           </TableRow>
         ))}

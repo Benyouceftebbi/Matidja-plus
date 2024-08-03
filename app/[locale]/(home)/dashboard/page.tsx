@@ -1,13 +1,13 @@
 "use client";
-import { formatDateToYYYYMMDD, markAttendance } from "@/lib/hooks/students";
+import { markAttendance } from "@/lib/hooks/students";
 import Image from "next/image";
 import QrScanner from "qr-scanner";
-import { useEffect, useRef, useState } from "react";
+import {  useRef, useState } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { useData } from "@/context/admin/fetchDataContext";
 import { Student } from "@/validators/auth";
-import { parse, isWithinInterval, addMinutes, subMinutes, format } from 'date-fns';
+import { format } from 'date-fns';
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Label } from "@/components/ui/label";
 import { RadioGroup,RadioGroupItem } from "@/components/ui/radio-group";
-import { writeAttendance } from "@/lib/hooks/students";
+
  
 import * as React from "react"
 import { Check, ChevronsUpDown } from "lucide-react"

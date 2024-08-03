@@ -59,12 +59,6 @@ const t=useTranslations()
           className={`${pathname=== '/teachers' ?'text-black-500 dark:text-white ' : 'text-muted-foreground hover:text-foreground foreground transition-colors'}`}
         >
           {t('teachers-0')} </Link>
-
-        <Link
-          href="/classes"
-          className={`${pathname=== '/classes' ?'text-black-500 dark:text-white ' : 'text-muted-foreground hover:text-foreground foreground transition-colors'}`}
-        >
-          {t('classes')} </Link>
         <Link
           href="/settings"
           className={`${pathname=== '/settings' ?'text-black-500 dark:text-white ' : 'text-muted-foreground hover:text-foreground foreground transition-colors'}`}
@@ -122,11 +116,7 @@ const t=useTranslations()
           className={`${pathname=== '/teachers' ?'text-black-500 dark:text-white ' : 'text-muted-foreground hover:text-foreground foreground transition-colors'}`}
         >
           {t('teachers-0')} </Link>
-        <Link
-          href="/classes"
-          className={`${pathname=== '/classes' ?'text-black-500 dark:text-white ' : 'text-muted-foreground hover:text-foreground foreground transition-colors'}`}
-        >
-          {t('classes')} </Link>
+
         <Link
           href="/settings"
           className={`${pathname=== '/settings' ?'text-black-500 dark:text-white ' : 'text-muted-foreground hover:text-foreground foreground transition-colors'}`}

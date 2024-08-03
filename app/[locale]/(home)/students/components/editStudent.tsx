@@ -55,6 +55,7 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { UseFormReturn } from 'react-hook-form';
 import { useData } from '@/context/admin/fetchDataContext';
+import { useTranslations } from 'next-intl';
 
 interface FooterProps {
   formData: Student;
@@ -70,33 +71,25 @@ interface openModelProps {
   open: boolean; // Specify the type of setOpen
   student:Student
 }
-const subjects =['Scientific Stream', 'Literature and Philosophy', 'Literature and Languages', 'Economics', 'Mathematics and Technology', 'Mathematics']
+const subjects =['متوسط','علوم تجريبية', 'تقني رياضي', 'رياضيات', 'تسيير واقتصاد ', 'لغات اجنبية ', 'اداب وفلسفة']
 const classess = [
   "Select Option",
-  "Mathematics",
-  "Physics",
-  "Chemistry",
-  "Biology",
-  "Geography",
-  "History",
-  "Philosophy",
-  "Arabic",
-  "French",
-  "English",
-  "Islamic Education",
-  "Technology",
-  "Computer Science",
-  "Art",
-  "Physical Education",
-  "Economics",
-  "German",
-  "Spanish",
-  "Law",
-  "Business Studies",
-  "Social Sciences",
-  "Engineering",
-  "Architecture",
-  "Environmental Science"
+  "قانون",
+  "اقتصاد",
+  "محاسبة",
+  "اسبانية",
+  "المانية",
+  "ايطالية",
+  "رياضيات",
+  "علوم",
+  "فيزياء",
+  "العلوم الاسلامية",
+  "تاريخ وجغرافيا",
+  "هندسة مدنية",
+  "هندسة ميكانيكية",
+  "هندسة الطرائق",
+  "الهندسة الكهربائية",
+  "فلسفة"
 ];
 const steps = [
   { label: "Step 1" },
@@ -116,6 +109,7 @@ const years=[
 const EditStudent: React.FC<openModelProps> = ({ setOpen, open,student }) => {
   const camera = useRef<null | { takePhoto: () => string }>(null);
   const {setStudents,teachers,classes,students}=useData()
+  const t=useTranslations()
   const form = useForm<any>({
     
     defaultValues:student
@@ -194,7 +188,7 @@ const EditStudent: React.FC<openModelProps> = ({ setOpen, open,student }) => {
       <Form {...form} >
       <form >
         <DialogHeader>
-          <DialogTitle>Add Student</DialogTitle>
+          <DialogTitle>{t('Add student')}</DialogTitle>
           <DialogDescription>
             Add your Student here. Click save when you're done.
           </DialogDescription>
@@ -217,7 +211,7 @@ const EditStudent: React.FC<openModelProps> = ({ setOpen, open,student }) => {
                   name="name"
                   render={({ field }) => (
                     <FormItem className="grid grid-cols-4 items-center gap-4">
-                      <FormLabel className="text-right">Name</FormLabel>
+                      <FormLabel className="text-right">{t('Name')}</FormLabel>
                       <FormControl><Input id="name"  className="col-span-3"  {...field}/></FormControl>
 
                       
@@ -231,7 +225,7 @@ const EditStudent: React.FC<openModelProps> = ({ setOpen, open,student }) => {
               name="birthdate"
               render={({ field }) => (
                 <FormItem className="grid grid-cols-4 items-center gap-4">
-                  <FormLabel className="text-right">Birthdate</FormLabel>
+                  <FormLabel className="text-right">{t('Birthdate')}</FormLabel>
                   <FormControl>  
                     <CalendarDatePicker
             {...field}
@@ -256,7 +250,7 @@ const EditStudent: React.FC<openModelProps> = ({ setOpen, open,student }) => {
               name="birthplace"
               render={({ field }) => (
                 <FormItem className="grid grid-cols-4 items-center gap-4">
-                  <FormLabel className="text-right">Birthplace</FormLabel>
+                  <FormLabel className="text-right">{t('Birthplace')}</FormLabel>
                   <FormControl><Input id="birthplace" className="col-span-3" {...field} /></FormControl>
                   
                 </FormItem>
@@ -269,7 +263,7 @@ const EditStudent: React.FC<openModelProps> = ({ setOpen, open,student }) => {
               name="school"
               render={({ field }) => (
                 <FormItem className="grid grid-cols-4 items-center gap-4">
-                  <FormLabel className="text-right">School</FormLabel>
+                  <FormLabel className="text-right">{t('School')}</FormLabel>
                   <FormControl><Input id="school" className="col-span-3" {...field} /></FormControl>
                   
                 </FormItem>
@@ -282,7 +276,7 @@ const EditStudent: React.FC<openModelProps> = ({ setOpen, open,student }) => {
   name="year"
   render={({ field }) => (
     <FormItem className="grid grid-cols-4 items-center gap-4">
-      <FormLabel className="text-right">Year</FormLabel>
+      <FormLabel className="text-right">{t('Year')}</FormLabel>
       <FormControl>
       <Select
    onValueChange={field.onChange}
@@ -316,7 +310,7 @@ const EditStudent: React.FC<openModelProps> = ({ setOpen, open,student }) => {
   name="field"
   render={({ field }) => (
     <FormItem className="grid grid-cols-4 items-center gap-4">
-      <FormLabel className="text-right">field</FormLabel>
+      <FormLabel className="text-right">{t('field')}</FormLabel>
       <FormControl>
       <Select
    onValueChange={field.onChange}
@@ -350,7 +344,7 @@ const EditStudent: React.FC<openModelProps> = ({ setOpen, open,student }) => {
               name="phoneNumber"
               render={({ field }) => (
                 <FormItem className="grid grid-cols-4 items-center gap-4">
-                  <FormLabel className="text-right">Phone Number</FormLabel>
+                  <FormLabel className="text-right">{t('Phone Number')}</FormLabel>
                   <FormControl><Input id="phoneNumber" className="col-span-3" {...field} /></FormControl>
                   
                 </FormItem>
@@ -378,14 +372,14 @@ const EditStudent: React.FC<openModelProps> = ({ setOpen, open,student }) => {
             variant="link"
             type='button'
           >
-            Take photo
+            {t('Take photo')}
           </Button>
         </div>
       ) : (
         <>
           <img src={watch('photo')?watch('photo'):null} alt="Taken photo"  className='w-[300px]'/>
           <Button onClick={() =>   setValue('photo',null)} variant="link" type='button'>
-            Retake photo
+            {t('Retake photo')}
           </Button>
         </>
       )}
@@ -397,14 +391,14 @@ const EditStudent: React.FC<openModelProps> = ({ setOpen, open,student }) => {
     <Table>
       <TableCaption>        <Button type='button' size="sm" variant="ghost" className="gap-1 w-full"  onClick={()=>appendClass({id:'',name:'',subject:'',time:''})}>
                       <PlusCircle className="h-3.5 w-3.5" />
-                      add group</Button></TableCaption>
+                      {t('add group')}</Button></TableCaption>
       <TableHeader>
         <TableRow>
-        <TableHead>Subject</TableHead>
-          <TableHead >Name</TableHead>
-          <TableHead>Time</TableHead>
-          <TableHead>CS</TableHead>
-          <TableHead>Action</TableHead>
+        <TableHead>{t('Subject')}</TableHead>
+          <TableHead >{t('Name')}</TableHead>
+          <TableHead>{t('Time')}</TableHead>
+          <TableHead>{t('CS')}</TableHead>
+          <TableHead>{t('Action')}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -417,7 +411,7 @@ const EditStudent: React.FC<openModelProps> = ({ setOpen, open,student }) => {
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-        <SelectLabel>Subjects</SelectLabel>
+        <SelectLabel>{t('Subjects')}</SelectLabel>
                     {classess.map(subject => (
                       <SelectItem key={subject} value={subject}>
                         {subject}
@@ -433,7 +427,7 @@ const EditStudent: React.FC<openModelProps> = ({ setOpen, open,student }) => {
       </SelectTrigger>
       <SelectContent>
       {invoice.subject? ( <SelectGroup>
-          <SelectLabel>Groups</SelectLabel>
+          <SelectLabel>{t('Groups')}</SelectLabel>
           {Array.from(new Set(classes
                         .filter(cls => cls.subject === invoice.subject && cls.year=== watch('year') &&   cls.groups.some(group => group.stream.includes(watch('field'))))
                       )).map(cls => (
@@ -450,13 +444,13 @@ const EditStudent: React.FC<openModelProps> = ({ setOpen, open,student }) => {
       </SelectTrigger>
       <SelectContent>
       {invoice.subject && invoice.name? ( <SelectGroup>
-          <SelectLabel>times</SelectLabel>
+          <SelectLabel>{t('times')}</SelectLabel>
           {(classes.find(cls => cls.subject === invoice.subject && cls.year=== watch('year') &&   cls.groups.some(group => group.stream.includes(watch('field'))) && cls.teacherName === invoice.name ))?.groups?.map((cls,index) => (
                           <SelectItem key={index} value={JSON.stringify(`${cls.day},${cls.start}-${cls.end}`)}>
                             {cls.day},{cls.start}-{cls.end}
                           </SelectItem>
                         ))}
-        </SelectGroup>):(<p className="text-sm text-muted-foreground">Select Subject and name first</p>)}
+        </SelectGroup>):(<p className="text-sm text-muted-foreground">{t('Select Subject and name first')}</p>)}
       </SelectContent>
     </Select></TableCell>
     <TableCell className="font-medium"> 
@@ -477,7 +471,7 @@ const EditStudent: React.FC<openModelProps> = ({ setOpen, open,student }) => {
       </SelectContent>
     </Select></TableCell>
     <TableCell>   
-       <Button  type="button" variant="destructive" onClick={()=>removeClass(index)}>remove</Button></TableCell>
+       <Button  type="button" variant="destructive" onClick={()=>removeClass(index)}>{t('remove')}</Button></TableCell>
 
           </TableRow>
         ))}
@@ -686,6 +680,7 @@ console.log("removed",cls);
   
  
     const {toast}=useToast()
+    const t=useTranslations()
   const onSubmit = async (data: Student) => {
  const result=compareClasses(data.classes,student.classes)
  
@@ -766,7 +761,7 @@ toast({
                  <DialogFooter>
                      <DialogClose asChild>
           <LoadingButton size="sm"            type='submit'  onClick={form.handleSubmit(onSubmit)}>
-            Save changes
+            {t('Save changes')}
           </LoadingButton>
           
           </DialogClose>
@@ -780,10 +775,10 @@ toast({
               variant="secondary"
               type='button'
             >
-              Prev
+              {t('Prev')}
             </Button>
             <Button size="sm"            type={"button"}    onClick={nextStep}>
-              {"Next"}
+              {t("Next")}
             </Button>
     
           </>

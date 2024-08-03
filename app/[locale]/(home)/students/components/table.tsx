@@ -1,5 +1,3 @@
-
-
 import * as React from "react"
 import {
   ChevronDownIcon,
@@ -181,27 +179,27 @@ interface DataTableDemoProps {
       },
       {
         accessorKey: "year",
-        header: () => <div style={{ whiteSpace: 'pre-wrap' }}>year</div>,
+        header: () => <div style={{ whiteSpace: 'pre-wrap' }}>{t('year')}</div>,
         cell: ({ row }) => <div>{row.getValue("year")}</div>,
       },
       {
         accessorKey: "field",
-        header: () => <div >field</div>,
+        header: () => <div >{t('field')}</div>,
         cell: ({ row }) => <div>{row.getValue("field")}</div>,
       },
       {
         accessorKey: "phone",
-        header: () => <div >Phone</div>,
+        header: () => <div >{t('Phone')}</div>,
         cell: ({ row }) => <div>{row.original.phoneNumber}</div>,
       },
       {
         accessorKey: "school",
-        header: () => <div >school</div>,
+        header: () => <div >{t('school')}</div>,
         cell: ({ row }) => <div>{row.getValue("school")}</div>,
       },
       {
         id: "classes",
-        header: () => <div>Classes</div>,
+        header: () => <div>{t('Classes')}</div>,
         cell: ({ row }) => {
           const classesuid = row.original.classes;
 
@@ -241,7 +239,7 @@ interface DataTableDemoProps {
                 <DropdownMenuItem onClick={() => openEditSheet(student)}>
                   {t('edit')} </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => openCardSheet(student)}>
-                 New Card </DropdownMenuItem>
+                 {t('New Card')} </DropdownMenuItem>
                 <DropdownMenuItem onClick={() =>setOpenAlert(true)}>
           {t('delete')} </DropdownMenuItem>
               </DropdownMenuContent>
@@ -460,13 +458,12 @@ const orderedMonths = [
       <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
   <AlertDialogContent>
     <AlertDialogHeader>
-      <AlertDialogTitle>Heads up!</AlertDialogTitle>
+      <AlertDialogTitle>{t('heads-up')}</AlertDialogTitle>
       <AlertDialogDescription>
-Are you sure you want to delete student
-      </AlertDialogDescription>
+{t('are-you-sure-you-want-to-delete-student')} </AlertDialogDescription>
     </AlertDialogHeader>
     <AlertDialogFooter>
-      <AlertDialogCancel>Cancel</AlertDialogCancel>
+      <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
       <AlertDialogAction className={buttonVariants({ variant: "destructive" })}  onClick={() =>{deleteStudent(student,classes), setStudents((prevStudents:any) =>
       prevStudents.filter((std:any) => std.id !== student.id)
 
@@ -481,7 +478,7 @@ Are you sure you want to delete student
     }}> 
         
         
-        Delete</AlertDialogAction>
+        {t('Delete')}</AlertDialogAction>
     </AlertDialogFooter>
   </AlertDialogContent>
 </AlertDialog>

@@ -19,6 +19,7 @@ import {
   MbscEventcalendarView,
   MbscResource,
   setOptions,
+  locale,
 } from '@mobiscroll/react';
 import { FC} from 'react';
 import './style.css'
@@ -302,6 +303,7 @@ const VerticalResourceView = () => {
       colors={myColors}
       onEventClick={handleEventClick}
       groupBy='date'
+      locale={locale['fr']}
     />
 
         <AttandenceDataModel
