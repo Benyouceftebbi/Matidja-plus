@@ -554,8 +554,10 @@
   "phone":"Phone",
 
 
-  "qr-code-scanner":"QR Code Scanner"
- 
+  "qr-code-scanner":"QR Code Scanner",
+  
+  "select-end-time": "select end tie ",
+  "select-room": "select room"
 
 
 }
