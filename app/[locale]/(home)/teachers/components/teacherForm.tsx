@@ -68,6 +68,7 @@ import { useData } from "@/context/admin/fetchDataContext";
 import { generateTimeOptions } from '../../settings/components/open-days-table';
 import { setgroups } from 'process';
 import { parse, isBefore, isAfter, isEqual } from 'date-fns';
+import { ScrollArea } from "@/components/ui/scroll-area";
 const parseTime = (timeString) => parse(timeString, 'HH:mm', new Date());
 interface FooterProps {
   formData: Teacher;
@@ -379,6 +380,7 @@ const [schoolType, setSchoolType] = React.useState('');
 
 ) : (
   <div className="w-full h-full">
+         <ScrollArea className="h-[400px]">
    <Table>
   <TableCaption>
   <Button type='button' size="sm" variant="ghost" className="gap-1 w-full" onClick={() => appendClass({ day: '', start: '', end: '', quota: 0, stream: [] })}>
@@ -592,7 +594,7 @@ const [schoolType, setSchoolType] = React.useState('');
   </TableBody>
 </Table>
 
-
+</ScrollArea>
 </div>
 )}
               </div>
