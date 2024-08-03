@@ -79,7 +79,7 @@ const classess = [
    "علوم",
    "فيزياء",
    "فلسفة",
-   " العربية",
+   "العربية",
    "الإنجليزية",
    "الفرنسية",
    "اسبانية",
@@ -780,7 +780,7 @@ toast({
         {hasCompletedAllSteps ? (
                  <DialogFooter>
                      <DialogClose asChild>
-          <LoadingButton size="sm"            type='submit'  onClick={form.handleSubmit(onSubmit)}>
+          <LoadingButton size="sm"           disabled={isSubmitting} type='submit'  onClick={form.handleSubmit(onSubmit)}>
             {t('Save changes')}
           </LoadingButton>
           
