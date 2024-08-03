@@ -196,6 +196,7 @@ const {classes}=useData()
 // }, [watch("classes")]);
 
 const subjects = [
+  "Select Option",
   "قانون",
   "اقتصاد",
   "محاسبة",
@@ -211,7 +212,9 @@ const subjects = [
   "هندسة ميكانيكية",
   "هندسة الطرائق",
   "الهندسة الكهربائية",
-  "فلسفة"
+  "فلسفة",
+  "أدب وحوار",
+  "الإنجليزية"
 ];
 const years=[
   "1AM",
