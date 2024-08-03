@@ -402,7 +402,7 @@ const years=[
                           <SelectContent>
                             {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day) => (
                               <SelectItem key={day} value={day}>
-                                {day}
+                                {t(`${day}`)}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -498,7 +498,7 @@ const years=[
                           </FormControl>
 
                           <SelectContent>
-                          {['room 1','room 2','room 3','room 4','room 5','room 6'].map((room) => (
+                          {['room 1','room 2','room 3','room 4','room 5','room 6','room 7','room 8'].map((room) => (
                               <SelectItem key={room} value={room}>
                                 {room}
                               </SelectItem>

@@ -557,6 +557,12 @@
   "qr-code-scanner":"QR Code Scanner",
   
   "select-end-time": "select end tie ",
-  "select-room": "select room"
-
+  "select-room": "select room",
+  "Monday": "Monday",
+  "Tuesday": "Tuesday",
+  "Wednesday": "Wednesday",
+  "Thursday": "Thursday",
+  "Friday": "Friday",
+  "Saturday": "Saturday",
+  "Sunday": "Sunday"
 }

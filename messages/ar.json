@@ -560,5 +560,13 @@
   "teacher-edited-successfully": "",
   "select-room": "اختر الغرفة",
   "select-end-time": "حدد نهاية التعادل",
-  "introducing-our-dynamic-teacher-dashboard-for-seamless-management-and-insightful-analysis": ""
+  "introducing-our-dynamic-teacher-dashboard-for-seamless-management-and-insightful-analysis": "",
+
+  "Monday": "الاثنين",
+  "Tuesday": "الثلاثاء",
+  "Wednesday": "الأربعاء",
+  "Thursday": "الخميس",
+  "Friday": "الجمعة",
+  "Saturday": "السبت",
+  "Sunday": "الأحد"
 }

@@ -425,7 +425,7 @@ const [schoolType, setSchoolType] = React.useState('');
                           <SelectContent>
                             {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day) => (
                               <SelectItem key={day} value={day}>
-                              { t(`${day}`)}
+                              {t(`${day}`)}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -520,7 +520,7 @@ const [schoolType, setSchoolType] = React.useState('');
                           </FormControl>
 
                           <SelectContent>
-                            {checkRoomAvailability(watch(`classes.${index}`),['room 1','room 2','room 3','room 4','room 5','room 6']).map((room) => (
+                            {checkRoomAvailability(watch(`classes.${index}`),['room 1','room 2','room 3','room 4','room 5','room 6','room 7','room 8']).map((room) => (
                               <SelectItem key={room} value={room}>
                                 {room}
                               </SelectItem>

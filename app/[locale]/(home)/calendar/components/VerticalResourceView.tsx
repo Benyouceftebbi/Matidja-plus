@@ -264,6 +264,16 @@ const VerticalResourceView = () => {
         name: 'room 6',
         color: '#bacded',
       },
+      {
+        id:7,
+        name: 'room 7',
+        color: '#bacded',
+      },
+      {
+        id:8,
+        name: 'room 8',
+        color: '#bacded',
+      },
     ],
     [],
   );
