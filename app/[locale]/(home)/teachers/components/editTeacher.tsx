@@ -226,7 +226,7 @@ const years=[
 ]
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-[1100px]">
+      <DialogContent className="sm:max-w-[1300px]">
       <Form {...form} >
       <form >
         <DialogHeader>

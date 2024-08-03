@@ -286,7 +286,7 @@ export default function StudentForm() {
       <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
   <AlertDialogContent>
     <AlertDialogHeader>
-      <AlertDialogTitle>Heads up!</AlertDialogTitle>
+      <AlertDialogTitle>{t('heads-up')}</AlertDialogTitle>
       <AlertDialogDescription>
  {alertText}
       </AlertDialogDescription>

@@ -333,9 +333,9 @@ const orderedMonths = [
     
     <Input
           placeholder={t('filter-student')}
-          value={(table.getColumn("student")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("student")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm mt-4"
         />
