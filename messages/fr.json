@@ -557,5 +557,9 @@
   "calendar": "Calendrier",
   "phone": "Téléphone",
   "introducing-our-dynamic-teacher-dashboard-for-seamless-management-and-insightful-analysis": "Présentation de notre tableau de bord dynamique pour les enseignants pour une gestion fluide et une analyse perspicace",
-  "qr-code-scanner": "Scanner de code QR"
+  "qr-code-scanner": "Scanner de code QR",
+  "teacher-edited-successfully": "",
+  "select-room": "sélectionner une chambre",
+  "select-end-time": "sélectionner la fin du lien"
+
 }
