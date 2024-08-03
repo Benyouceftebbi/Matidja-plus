@@ -199,13 +199,13 @@ export const formatDateToYYYYMMDD = (date: Date): string => {
     const studentDocRef = doc(db, 'Students', studentId);  
   console.log("dqwdqdwqwdqwd",id, group,index,name,year,cs);
   
-      // await updateDoc(studentDocRef, {
-      //   classesUIDs: arrayRemove({ id, group })
-      // });
+      await updateDoc(studentDocRef, {
+        classesUIDs: arrayRemove({ id, group })
+      });
   
       const classDocRef = doc(db, 'Groups', id);
       await updateDoc(classDocRef, {
-        students: arrayRemove({ group, id, index, name, year,cs })
+        students: arrayRemove({ group, studentId, index, name, year,cs })
       });
     }
     
