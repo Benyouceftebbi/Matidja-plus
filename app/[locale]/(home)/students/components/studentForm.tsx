@@ -693,10 +693,8 @@ const Footer: React.FC<FooterProps> = ({ formData, form, isSubmitting,reset}) =>
   const onSubmit = async(data:any) => {
 
    
-   
-    const coll = collection(db, "Students");
-    const studentIndex=await getCountFromServer(coll)
-    const newData=await addStudent({...data,studentIndex:studentIndex})
+  
+    const newData=await addStudent({...data,studentIndex:students.length+1})
     generateQrCode(data.id);
     setStudents((prev: Student[]) => {
       // Create updated classes by mapping through the data.classes
@@ -715,7 +713,7 @@ const Footer: React.FC<FooterProps> = ({ formData, form, isSubmitting,reset}) =>
         ...prev,
         {
           ...data,
-          studentIndex:studentIndex,  // Basic student details
+          studentIndex:students.length+1,  // Basic student details
           classes: updatedClasses  // Updated classes with new indexes
         }
       ];
