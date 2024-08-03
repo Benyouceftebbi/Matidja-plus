@@ -545,5 +545,9 @@
   "select-school-type": "Sélectionnez le type d'école",
   "select-subject": "Sélectionnez le sujet",
   "select-year": "Sélectionnez l'année",
-  "start-time": "Heure de début"
+  "start-time": "Heure de début",
+  "teacher-edited-successfully": "",
+  "select-room": "sélectionner une chambre",
+  "select-end-time": "sélectionner la fin du lien",
+  "introducing-our-dynamic-teacher-dashboard-for-seamless-management-and-insightful-analysis": ""
 }

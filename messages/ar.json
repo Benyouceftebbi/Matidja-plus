@@ -545,5 +545,9 @@
   "select-school-type": "اختر نوع المدرسة",
   "select-subject": "حدد الموضوع",
   "select-year": "اختر السنة",
-  "start-time": "وقت البدء"
+  "start-time": "وقت البدء",
+  "teacher-edited-successfully": "",
+  "select-room": "اختر الغرفة",
+  "select-end-time": "حدد نهاية التعادل",
+  "introducing-our-dynamic-teacher-dashboard-for-seamless-management-and-insightful-analysis": ""
 }

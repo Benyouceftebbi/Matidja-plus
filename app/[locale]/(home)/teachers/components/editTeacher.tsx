@@ -109,7 +109,7 @@ const EditTeacher: React.FC<openModelProps> = ({ setOpen, open,teacher }) => {
     // you can do async server request and fill up form
 
       reset(teacher);
-      console.log("teacher",teacher);
+
       
   }, [reset,teacher]); 
 
@@ -155,47 +155,45 @@ const handleYearToggle = (field:string) => {
 const truncateToMinutes = (date: Date) => startOfMinute(date);
 
 const {classes}=useData()
-const checkRoomAvailability = useCallback((newGroup: Group, allRooms: string[]): string[] => {
-  const { day, start, end, classId, room: newGroupRoom } = newGroup;
-  console.log(day, start, end, classId);
+// const checkRoomAvailability = useCallback((newGroup: Group, allRooms: string[]): string[] => {
+//   const { day, start, end, classId, room: newGroupRoom } = newGroup;
+//   // Check if any of the required fields are missing
+//   if (!day || !start || !end) {
+//     return [];
+//   }
 
-  // Check if any of the required fields are missing
-  if (!day || !start || !end) {
-    return [];
-  }
+//   const newGroupStart = truncateToMinutes(parseTime(start));
+//   const newGroupEnd = truncateToMinutes(parseTime(end));
 
-  const newGroupStart = truncateToMinutes(parseTime(start));
-  const newGroupEnd = truncateToMinutes(parseTime(end));
+//   // Filter rooms based on time availability
+//   const availableRooms = allRooms.filter((room) => {
+//     return !classes.some((classItem) =>
+//       classItem.groups.some((group) => {
+//         const groupStart = truncateToMinutes(parseTime(group.start));
+//         const groupEnd = truncateToMinutes(parseTime(group.end));
 
-  // Filter rooms based on time availability
-  const availableRooms = allRooms.filter((room) => {
-    return !classes.some((classItem) =>
-      classItem.groups.some((group) => {
-        const groupStart = truncateToMinutes(parseTime(group.start));
-        const groupEnd = truncateToMinutes(parseTime(group.end));
+//         const isOverlapping = group.day === day &&
+//           group.room === room &&
+//           ((isBefore(newGroupStart, groupEnd) && isAfter(newGroupEnd, groupStart)) ||
+//            isEqual(newGroupStart, groupStart) || 
+//            isEqual(newGroupEnd, groupEnd) ||
+//            (isBefore(newGroupStart, groupEnd) && isEqual(newGroupEnd, groupEnd))
+//           );
 
-        const isOverlapping = group.day === day &&
-          group.room === room &&
-          ((isBefore(newGroupStart, groupEnd) && isAfter(newGroupEnd, groupStart)) ||
-           isEqual(newGroupStart, groupStart) || 
-           isEqual(newGroupEnd, groupEnd) ||
-           (isBefore(newGroupStart, groupEnd) && isEqual(newGroupEnd, groupEnd))
-          );
+//         // Exclude the room if it is overlapping
+//         return isOverlapping;
+//       })
+//     );
+//   });
 
-        // Exclude the room if it is overlapping
-        return isOverlapping;
-      })
-    );
-  });
+//   // Include the specified room if classId exists
+//   if (classId && allRooms.includes(newGroupRoom)) {
+//     return [...availableRooms, newGroupRoom];
+//   }
 
-  // Include the specified room if classId exists
-  if (classId && allRooms.includes(newGroupRoom)) {
-    return [...availableRooms, newGroupRoom];
-  }
-
-  // Return only the available rooms
-  return availableRooms;
-}, [watch("classes")]);
+//   // Return only the available rooms
+//   return availableRooms;
+// }, [watch("classes")]);
 
 const subjects = [
   "قانون",
@@ -494,7 +492,7 @@ const years=[
                           </FormControl>
 
                           <SelectContent>
-                          {checkRoomAvailability(watch(`classes.${index}`),['room 1','room 2','room 3','room 4','room 5','room 6']).map((room) => (
+                          {['room 1','room 2','room 3','room 4','room 5','room 6'].map((room) => (
                               <SelectItem key={room} value={room}>
                                 {room}
                               </SelectItem>
@@ -616,7 +614,7 @@ function getClassKey(cls) {
 
   const dataClassMap = new Map(dataClasses.map((cls, index) => [index, { ...cls, index }]));
   const teacherClassMap = new Map(teacherClasses.map((cls, index) => [index, { ...cls, index }]));
-  console.log("dataclass",dataClassMap);
+
   // Collect all existing groups to find the highest group number
   const existingGroups = new Set<string>();
   teacherClasses.forEach(cls => {
@@ -645,27 +643,33 @@ function getClassKey(cls) {
 
   // Find added and updated classes
   for (const [key, dataClass] of dataClassMap) {
-
+     
+      
     if (!('group' in dataClass)) {
       const classId = classes.find(cls => cls.teacherName === teacher.name && cls.year === dataClass.year);
-      
     
       if (classId) {
-      highestGroupNumber++;
-      result.added.push({
-        ...dataClass,
-        classId: classId.id,
-        group: `G${highestGroupNumber}`,
-        subject: classId.subject
-      });
+        highestGroupNumber++;
+        result.added.push({
+          ...dataClass,
+          classId: classId.id,
+          group: `G${highestGroupNumber}`,
+          subject: classId.subject
+        });
+        
+        // Ensure that newAdded is not updated with the same dataClass
+        const yearExistsInAdded = result.added.some(item => item.year === dataClass.year);
+        if (!yearExistsInAdded) {
+          result.newAdded.push(dataClass);
+        }
+      } else {
+        // If no classId is found, only add to newAdded
+        const yearExists = result.newAdded.some(item => item.year === dataClass.year);
+        if (!yearExists) {
+          result.newAdded.push(dataClass);
+        }
+      }
     }
-    const yearExists = result.newAdded.some((item) => item.year === dataClass.year);
-    if (!yearExists) {
-      result.newAdded.push(dataClass);
-    
-      
-    }
-  }
     else  {
       const teacherClass = teacherClasses.find(cls => cls.group === dataClass.group && cls.year === dataClass.year);
 
@@ -687,7 +691,6 @@ function getClassKey(cls) {
             day: dataClass.day,
             room: dataClass.room
           });
-          console.log('updated',result);
           
         }
       }
@@ -775,7 +778,7 @@ function getClassKey(cls) {
       return std; // Return the student as is if not in studentsToRemove
     })
   );
-  // console.log("removed",cls);
+
   
         }
       }
@@ -873,8 +876,7 @@ function getClassKey(cls) {
       : tchr
   )
 );
-//add to classes and teahcers forn ends
-          console.log(`Document for year ${year} successfully written!`);
+
         } catch (error) {
           console.error(`Error writing document for year ${year}:`, error);
         }
@@ -885,6 +887,7 @@ function getClassKey(cls) {
   const {toast}=useToast()
   const onSubmit = async(data:Teacher) => {
 const result=compareClasses(data.classes,teacher.classes)
+console.log(result);
 
   await processStudentChanges(result,data)
   const { classes, ...teacherData } = data;
