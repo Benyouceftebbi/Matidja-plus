@@ -152,21 +152,21 @@ interface DataTableDemoProps {
    const {toast}=useToast()
    const [openAlert,setOpenAlert]=React.useState(false)
     const columns: ColumnDef<any>[] = [
-      {
-        accessorKey: "index",
-        header: () => <div >Index</div>,
+    //   {
+    //     accessorKey: "index",
+    //     header: () => <div >Index</div>,
      
-        cell: ({ row,table}) => {
-         (table.getSortedRowModel()?.flatRows?.findIndex((flatRow) => flatRow.id === row.id) || 0) + 1
-       return (
-        <div className="capitalize" style={{ width: '10px' }}>
-        <div className="font-medium">{row.original.studentIndex}</div>
-     </div>
-       )
+    //     cell: ({ row,table}) => {
+    //      (table.getSortedRowModel()?.flatRows?.findIndex((flatRow) => flatRow.id === row.id) || 0) + 1
+    //    return (
+    //     <div className="capitalize" style={{ width: '10px' }}>
+    //     <div className="font-medium">{row.original.studentIndex}</div>
+    //  </div>
+    //    )
 
       
-         }
-      },
+    //      }
+    //   },
       {
         accessorKey: "name",
         header: () => <div >{t('name')}</div>,
