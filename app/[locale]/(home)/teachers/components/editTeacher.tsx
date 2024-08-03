@@ -66,7 +66,7 @@ import { useData } from "@/context/admin/fetchDataContext";
 
 import { generateTimeOptions } from '../../settings/components/open-days-table';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { parse, isBefore, isAfter, isEqual } from 'date-fns';
+import { parse, isBefore, isAfter, isEqual, startOfMinute } from 'date-fns';
 const parseTime = (timeString) => parse(timeString, 'HH:mm', new Date());
 interface FooterProps {
   formData: Teacher;
@@ -152,36 +152,49 @@ const handleYearToggle = (field:string) => {
   }
 };
 
+const truncateToMinutes = (date: Date) => startOfMinute(date);
 
 const {classes}=useData()
 const checkRoomAvailability = useCallback((newGroup: Group, allRooms: string[]): string[] => {
-  const { day, start, end } = newGroup;
-  console.log(day, start, end);
+  const { day, start, end, classId, room: newGroupRoom } = newGroup;
+  console.log(day, start, end, classId);
+
   // Check if any of the required fields are missing
   if (!day || !start || !end) {
     return [];
   }
 
-  
-  const newGroupStart = parseTime(start);
-  const newGroupEnd = parseTime(end);
+  const newGroupStart = truncateToMinutes(parseTime(start));
+  const newGroupEnd = truncateToMinutes(parseTime(end));
 
-  return allRooms.filter((room) => {
+  // Filter rooms based on time availability
+  const availableRooms = allRooms.filter((room) => {
     return !classes.some((classItem) =>
       classItem.groups.some((group) => {
-        const groupStart = parseTime(group.start);
-        const groupEnd = parseTime(group.end);
+        const groupStart = truncateToMinutes(parseTime(group.start));
+        const groupEnd = truncateToMinutes(parseTime(group.end));
 
-        return group.day === day &&
+        const isOverlapping = group.day === day &&
           group.room === room &&
           ((isBefore(newGroupStart, groupEnd) && isAfter(newGroupEnd, groupStart)) ||
            isEqual(newGroupStart, groupStart) || 
            isEqual(newGroupEnd, groupEnd) ||
            (isBefore(newGroupStart, groupEnd) && isEqual(newGroupEnd, groupEnd))
           );
+
+        // Exclude the room if it is overlapping
+        return isOverlapping;
       })
     );
   });
+
+  // Include the specified room if classId exists
+  if (classId && allRooms.includes(newGroupRoom)) {
+    return [...availableRooms, newGroupRoom];
+  }
+
+  // Return only the available rooms
+  return availableRooms;
 }, [watch("classes")]);
 
 const subjects = [
@@ -469,6 +482,7 @@ const years=[
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
+                        
                         >
                           <FormControl>
                             <SelectTrigger

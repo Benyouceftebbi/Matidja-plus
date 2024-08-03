@@ -64,6 +64,8 @@ import {
 } from "@/components/ui/alert-dialog"
 import { useTranslations } from 'next-intl';
 import { addStudent } from '@/lib/hooks/students';
+import { collection, getCountFromServer } from 'firebase/firestore';
+import { db } from '@/firebase/firebase-config';
 interface FooterProps {
   formData: Student;
   form: UseFormReturn<any>; // Use the specific form type if available
@@ -576,7 +578,7 @@ export default function StudentForm() {
           <SelectLabel>{t('times')}</SelectLabel>
           {(classes.find(cls => cls.subject === invoice.subject && cls.year=== watch('year') &&   cls.groups.some(group => group.stream.includes(watch('field'))) && cls.teacherName === invoice.name ))?.groups?.map((cls,index) => (
                           <SelectItem key={index} value={JSON.stringify(`${cls.day},${cls.start}-${cls.end}`)}>
-                            {cls.day},{cls.start}-{cls.end}
+                            {t(`${cls.day}`)},{cls.start}-{cls.end}
                           </SelectItem>
                         ))}
         </SelectGroup>):(<p className="text-sm text-muted-foreground">Select Subject and name first</p>)}
@@ -679,9 +681,9 @@ const Footer: React.FC<FooterProps> = ({ formData, form, isSubmitting,reset}) =>
   const onSubmit = async(data:any) => {
 
    
-      
-    
-    const newData=await addStudent({...data,studentIndex:students.length+1})
+    const coll = collection(db, "Students");
+    const studentIndex=await getCountFromServer(coll)
+    const newData=await addStudent({...data,studentIndex:studentIndex.data().count+1})
     generateQrCode(data.id);
     setStudents((prev: Student[]) => {
       // Create updated classes by mapping through the data.classes
@@ -700,7 +702,7 @@ const Footer: React.FC<FooterProps> = ({ formData, form, isSubmitting,reset}) =>
         ...prev,
         {
           ...data,
-          studentIndex:students.length+1,  // Basic student details
+          studentIndex:studentIndex.data().count+1,  // Basic student details
           classes: updatedClasses  // Updated classes with new indexes
         }
       ];
