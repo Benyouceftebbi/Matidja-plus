@@ -209,7 +209,8 @@ const subjects = [
   "الهندسة الكهربائية",
   "فلسفة",
   "أدب وحوار",
-  "الإنجليزية"
+  "الإنجليزية",
+  "اللغة العربية"
 ];
 
 const [schoolType, setSchoolType] = React.useState('');
