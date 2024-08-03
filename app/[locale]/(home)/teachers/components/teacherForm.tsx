@@ -1,8 +1,9 @@
 "use client"
-import React from 'react';
+
 import {
   ChevronDownIcon,
 } from "@radix-ui/react-icons"
+import React, { useMemo,useCallback } from 'react';
 import { useToast } from "@/components/ui/use-toast"
 import { useTranslations } from "next-intl"
 import {
@@ -66,7 +67,8 @@ import { useData } from "@/context/admin/fetchDataContext";
 
 import { generateTimeOptions } from '../../settings/components/open-days-table';
 import { setgroups } from 'process';
- 
+import { parse, isBefore, isAfter, isEqual } from 'date-fns';
+const parseTime = (timeString) => parse(timeString, 'HH:mm', new Date());
 interface FooterProps {
   formData: Teacher;
   form: UseFormReturn<any>; // Use the specific form type if available
@@ -145,33 +147,7 @@ const handleYearToggle = (field:string) => {
   }
 };
 
-const subjects = [
-  "Select Option",
-  "Mathematics",
-  "Physics",
-  "Chemistry",
-  "Biology",
-  "Geography",
-  "History",
-  "Philosophy",
-  "Arabic",
-  "French",
-  "English",
-  "Islamic Education",
-  "Technology",
-  "Computer Science",
-  "Art",
-  "Physical Education",
-  "Economics",
-  "German",
-  "Spanish",
-  "Law",
-  "Business Studies",
-  "Social Sciences",
-  "Engineering",
-  "Architecture",
-  "Environmental Science"
-];
+
 /*const years=[
   "1AM",
   "2AM",
@@ -182,8 +158,57 @@ const subjects = [
   "3AS"
 ]
 */
+const {classes}=useData()
+const checkRoomAvailability = useCallback((newGroup: Group, allRooms: string[]): string[] => {
+  const { day, start, end } = newGroup;
+  console.log(day, start, end);
+  // Check if any of the required fields are missing
+  if (!day || !start || !end) {
+    return [];
+  }
+
+  
+  const newGroupStart = parseTime(start);
+  const newGroupEnd = parseTime(end);
+
+  return allRooms.filter((room) => {
+    return !classes.some((classItem) =>
+      classItem.groups.some((group) => {
+        const groupStart = parseTime(group.start);
+        const groupEnd = parseTime(group.end);
+
+        return group.day === day &&
+          group.room === room &&
+          ((isBefore(newGroupStart, groupEnd) && isAfter(newGroupEnd, groupStart)) ||
+           isEqual(newGroupStart, groupStart) || 
+           isEqual(newGroupEnd, groupEnd) ||
+           (isBefore(newGroupStart, groupEnd) && isEqual(newGroupEnd, groupEnd))
+          );
+      })
+    );
+  });
+}, [watch("classes")]);
 
 
+const subjects = [
+  "Select Option",
+  "قانون",
+  "اقتصاد",
+  "محاسبة",
+  "اسبانية",
+  "المانية",
+  "ايطالية",
+  "رياضيات",
+  "علوم",
+  "فيزياء",
+  "العلوم الاسلامية",
+  "تاريخ وجغرافيا",
+  "هندسة مدنية",
+  "هندسة ميكانيكية",
+  "هندسة الطرائق",
+  "الهندسة الكهربائية",
+  "فلسفة"
+];
 
 const [schoolType, setSchoolType] = React.useState('');
 
@@ -488,7 +513,7 @@ const [schoolType, setSchoolType] = React.useState('');
                           </FormControl>
 
                           <SelectContent>
-                            {['room 1','room 2','room 3','room 4','room 5','room 6'].map((room) => (
+                            {checkRoomAvailability(watch(`classes.${index}`),['room 1','room 2','room 3','room 4','room 5','room 6']).map((room) => (
                               <SelectItem key={room} value={room}>
                                 {room}
                               </SelectItem>
@@ -503,7 +528,7 @@ const [schoolType, setSchoolType] = React.useState('');
         <DropdownMenu>
     <DropdownMenuTrigger asChild>
       <Button variant="outline" className="ml-auto">
-        Select Fields <ChevronDownIcon className="ml-2 h-4 w-4" />
+      {t('select-field')} <ChevronDownIcon className="ml-2 h-4 w-4" />
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end">
@@ -538,7 +563,7 @@ const [schoolType, setSchoolType] = React.useState('');
                               id={`year-${index}`}
                               aria-label={`Select year`}
                             >
-                              <SelectValue placeholder="Select room" />
+                              <SelectValue placeholder={t('select-year')} />
                             </SelectTrigger>
                           </FormControl>
 
@@ -555,7 +580,7 @@ const [schoolType, setSchoolType] = React.useState('');
                   />
                   </TableCell>
         <TableCell>
-          <Button type="button" variant="destructive" onClick={() => removeClass(index)}>Remove</Button>
+          <Button type="button" variant="destructive" onClick={() => removeClass(index)}>{t('remove')}</Button>
         </TableCell>
       </TableRow>
     ))}
@@ -634,7 +659,7 @@ const Footer: React.FC<FooterProps> = ({ formData, form, isSubmitting,reset}) =>
       description: `The Teacher, ${data.name} added successfully`,
     });
   };
-
+  const t=useTranslations()
 
   return (
     <>
@@ -646,7 +671,7 @@ const Footer: React.FC<FooterProps> = ({ formData, form, isSubmitting,reset}) =>
             <CircleCheckIcon className="h-7 w-7 text-green-400" />
           </div>
           <div className="ml-4">
-            <h3 className="text-lg font-medium text-green-800">Teacher Created Successfully</h3>
+            <h3 className="text-lg font-medium text-green-800">  {t('teacher-added-successfully')}</h3>
           
           </div>
         </div>
@@ -658,7 +683,7 @@ const Footer: React.FC<FooterProps> = ({ formData, form, isSubmitting,reset}) =>
         {hasCompletedAllSteps ? (
                  <DialogFooter>
                      <DialogClose asChild>
-         
+                
           
           </DialogClose>
                </DialogFooter>
@@ -671,10 +696,10 @@ const Footer: React.FC<FooterProps> = ({ formData, form, isSubmitting,reset}) =>
               variant="secondary"
               type='button'
             >
-              Prev
+                {t('prev')}
             </Button>
             {isLastStep?(        <LoadingButton size="sm"    loading={isSubmitting}        type={'submit'}   onClick={form.handleSubmit(onSubmit)}>
-              Finish
+            {t('finish')}
             </LoadingButton>):(        <Button size="sm"            type={"button"}    onClick={nextStep}>
               {isLastStep ? "Finish" : isOptionalStep ? "Skip" : "Next"}
             </Button>)}
