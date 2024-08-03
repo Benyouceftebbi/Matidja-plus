@@ -73,7 +73,6 @@ interface openModelProps {
 }
 const subjects =['متوسط','علوم تجريبية', 'تقني رياضي', 'رياضيات', 'تسيير واقتصاد ', 'لغات اجنبية ', 'اداب وفلسفة']
 const classess = [
-  "Select Option",
   "قانون",
   "اقتصاد",
   "محاسبة",
@@ -276,10 +275,18 @@ const EditStudent: React.FC<openModelProps> = ({ setOpen, open,student }) => {
   name="year"
   render={({ field }) => (
     <FormItem className="grid grid-cols-4 items-center gap-4">
-      <FormLabel className="text-right">{t('Year')}</FormLabel>
+      <FormLabel className="text-right">{t("Year")}</FormLabel>
       <FormControl>
       <Select
-   onValueChange={field.onChange}
+   onValueChange={(e) => {
+    // Call the onChange handler with the new value
+    field.onChange(e);
+
+    // Check the value of 'year' and update 'field' if needed
+    if (["1AM", "2AM", "3AM", "4AM"].includes(e)) {
+      setValue("field", "متوسط");
+    }
+  }}
    defaultValue={field.value}
               >
                                  <SelectTrigger
@@ -305,7 +312,7 @@ const EditStudent: React.FC<openModelProps> = ({ setOpen, open,student }) => {
 />
 
 
-<FormField
+{!["1AM","2AM","3AM","4AM"].includes(watch('year')) && (<FormField
   control={control}
   name="field"
   render={({ field }) => (
@@ -336,7 +343,7 @@ const EditStudent: React.FC<openModelProps> = ({ setOpen, open,student }) => {
       <FormMessage />
     </FormItem>
   )}
-/>
+/>)}
   
 
     <FormField

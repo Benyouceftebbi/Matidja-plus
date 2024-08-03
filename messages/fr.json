@@ -545,5 +545,17 @@
   "select-school-type": "Sélectionnez le type d'école",
   "select-subject": "Sélectionnez le sujet",
   "select-year": "Sélectionnez l'année",
-  "start-time": "Heure de début"
+  "start-time": "Heure de début",
+  "scan-a-qr-code": "Scanner un code QR",
+  "point-your-camera-at-qr-code": "Pointez votre appareil photo sur un code QR pour afficher les détails associés.",
+  "stop-qr-scanner": "Arrêter le scanner QR",
+  "start-qr-scanner": "Démarrer le scanner QR",
+  "avaliable-classes": "Classes disponibles",
+  "reset": "Réinitialiser",
+  "confirm": "Confirmer",
+  "birth-place": "Lieu de naissance",
+  "calendar": "Calendrier",
+  "phone": "Téléphone",
+  "introducing-our-dynamic-teacher-dashboard-for-seamless-management-and-insightful-analysis": "Présentation de notre tableau de bord dynamique pour les enseignants pour une gestion fluide et une analyse perspicace",
+  "qr-code-scanner": "Scanner de code QR"
 }

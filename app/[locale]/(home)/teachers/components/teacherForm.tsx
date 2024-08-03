@@ -223,7 +223,7 @@ const [schoolType, setSchoolType] = React.useState('');
       <DialogTrigger asChild>
         <Button >{t('create-teacher')}</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[950px]">
+      <DialogContent className="sm:max-w-[1300px]">
       <Form {...form} >
       <form >
         <DialogHeader>
