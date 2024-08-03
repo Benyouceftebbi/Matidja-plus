@@ -149,7 +149,6 @@ interface DataTableDemoProps {
         header: () => <div>{t('classes')}</div>,
         cell: ({ row }) => {
           const classes = row.original.classes;
-          console.log(classes);
           
       return (
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
