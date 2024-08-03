@@ -48,36 +48,40 @@ export async function uploadAndLinkToCollection(
         await uploadAndLinkToCollection(student.photo, 'Students', student.id, 'photo');
       }
   
+      // Gather all necessary data before starting the transaction
+      const classUpdates: { classID: string, newIndex: number, group: string }[] = [];
+      
+      for (const cls of student.classes) {
+        const classRef = doc(db, 'Groups', cls.id);
+        const classDoc = await getDoc(classRef);
+        
+        if (classDoc.exists()) {
+          const classData = classDoc.data();
+          const students = classData.students || [];
+          const highestIndex = students.reduce((max, student) => Math.max(max, student.index || 0), 0);
+          const newIndex = highestIndex + 1;
+  
+          // Collect data for use in the transaction
+          classUpdates.push({ classID: cls.id, newIndex, group: cls.group });
+        } else {
+          console.log('No such document for class ID:', cls.id);
+          // Handle missing class documents if necessary
+        }
+      }
+  
       // Use a transaction to ensure atomic updates to class documents
       const result = await runTransaction(db, async (transaction) => {
-        const classUpdates: { classID: string, newIndex: number }[] = [];
-  
-        for (const cls of student.classes) {
-          const classRef = doc(db, 'Groups', cls.id);
-          const classDoc = await transaction.get(classRef);
-  
-          if (classDoc.exists()) {
-            const classData = classDoc.data();
-            const students = classData.students || [];
-            const highestIndex = students.reduce((max, student) => Math.max(max, student.index || 0), 0);
-            const newIndex = highestIndex + 1;
-  
-            // Update the class document within the transaction
-            transaction.update(classRef, {
-              students: arrayUnion({
-                id: student.id,
-                name: student.name,
-                index: newIndex,
-                year: student.year,
-                group: cls.group
-              })
-            });
-  
-            classUpdates.push({ classID: cls.id, newIndex });
-          } else {
-            console.log('No such document for class ID:', cls.id);
-            // Handle missing class documents if necessary
-          }
+        for (const update of classUpdates) {
+          const classRef = doc(db, 'Groups', update.classID);
+          transaction.update(classRef, {
+            students: arrayUnion({
+              id: student.id,
+              name: student.name,
+              index: update.newIndex,
+              year: student.year,
+              group: update.group // Use group from the collected data
+            })
+          });
         }
   
         // Return class updates for post-transaction processing
@@ -91,6 +95,7 @@ export async function uploadAndLinkToCollection(
       throw error; // Optionally re-throw the error
     }
   };
+  
 export const updateStudent = async(updatedstudent: any,studnetId:string)=>{
   try {
           await updateDoc(doc(db, "Students",studnetId), updatedstudent);
