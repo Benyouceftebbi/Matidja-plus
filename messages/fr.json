@@ -560,6 +560,13 @@
   "qr-code-scanner": "Scanner de code QR",
   "teacher-edited-successfully": "",
   "select-room": "sélectionner une chambre",
-  "select-end-time": "sélectionner la fin du lien"
+  "select-end-time": "sélectionner la fin du lien",
+  "Monday": "Lundi",
+  "Tuesday": "Mardi",
+  "Wednesday": "Mercredi",
+  "Thursday": "Jeudi",
+  "Friday": "Vendredi",
+  "Saturday": "Samedi",
+  "Sunday": "Dimanche"
 
 }

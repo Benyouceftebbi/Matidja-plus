@@ -418,10 +418,10 @@ const [schoolType, setSchoolType] = React.useState('');
                           </FormControl>
 
                           <SelectContent>
-                            {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day) => (
-                              <SelectItem key={day} value={day}>
-                              { t(`${day}`)}
-                              </SelectItem>
+                      {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day) => (
+                        <SelectItem key={day} value={day}>
+                          {t(day)}
+                        </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>

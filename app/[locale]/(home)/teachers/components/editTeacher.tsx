@@ -196,7 +196,6 @@ const {classes}=useData()
 // }, [watch("classes")]);
 
 const subjects = [
-  "Select Option",
   "قانون",
   "اقتصاد",
   "محاسبة",
@@ -212,9 +211,7 @@ const subjects = [
   "هندسة ميكانيكية",
   "هندسة الطرائق",
   "الهندسة الكهربائية",
-  "فلسفة",
-  "أدب وحوار",
-  "الإنجليزية"
+  "فلسفة"
 ];
 const years=[
   "1AM",
@@ -227,7 +224,7 @@ const years=[
 ]
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-[1100px]">
+      <DialogContent className="sm:max-w-[1300px]">
       <Form {...form} >
       <form >
         <DialogHeader>
@@ -397,10 +394,11 @@ const years=[
                           </FormControl>
 
                           <SelectContent>
-                            {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day) => (
-                              <SelectItem key={day} value={day}>
-                                {day}
-                              </SelectItem>
+                      {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day) => (
+                        <SelectItem key={day} value={day}>
+                          {t(day)}
+                        </SelectItem>
+
                             ))}
                           </SelectContent>
                         </Select>

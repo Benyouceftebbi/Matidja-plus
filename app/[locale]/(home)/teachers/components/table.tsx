@@ -156,7 +156,7 @@ interface DataTableDemoProps {
     <div key={index} style={{ maxWidth: '200px', marginBottom: '5px' }}>
       <div className="font-medium">{classItem.subject}</div>
       <div className="text-sm text-muted-foreground">
-        <div>{classItem.day}</div>
+        <div>{t(classItem.day)}</div>
         <div>{`${classItem.start} -> ${classItem.end}`}</div>
       </div>
     </div>
