@@ -124,6 +124,7 @@ export const deleteStudent = async (student, classes) => {
       }
 
       const indx = studentDetails.index;
+console.log('fdskwdkfkfkffkfkfkfkf',cls.group,student.id,indx,student.name,student.year,studentDetails.cs);
 
       // Reference to the class document
       const classDocRef = doc(db, 'Groups', cls.id);
@@ -198,7 +199,7 @@ export const formatDateToYYYYMMDD = (date: Date): string => {
     });
   
   }
-  export async function removeStudentFromClass(student,studentId) {
+  export async function removeStudentFromClass(student,studentId,studentName) {
     const { id, group,index,name,year,cs } = student;
   
     const studentDocRef = doc(db, 'Students', studentId);  
@@ -210,7 +211,7 @@ export const formatDateToYYYYMMDD = (date: Date): string => {
   
       const classDocRef = doc(db, 'Groups', id);
       await updateDoc(classDocRef, {
-        students: arrayRemove({ group, id:studentId, index, name, year,cs })
+        students: arrayRemove({ group:student.group, id:studentId, index:student.index, name:studentName, year:student.year,cs:student.cs })
       });
      }
     
