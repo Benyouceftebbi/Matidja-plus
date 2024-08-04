@@ -644,7 +644,10 @@ await addStudentToClass({...cls,index:index,year:student.year,studentName:studen
     if (removed && Array.isArray(removed)) {
       for (const cls of removed) {
         const { id, group,index,name,year,cs} = cls;
-await removeStudentFromClass({...cls,year:student.year},student.id)
+       
+        
+await removeStudentFromClass({...cls,year:student.year},student.id,student.name)
+console.log('zakamoooooooooo',cls , 'id', student.id, 'year ', student.year, 'name',student.name);
        setClasses(prevClasses => 
           prevClasses.map(cls =>
       cls.id === id ? {
