@@ -738,7 +738,8 @@ const Footer: React.FC<FooterProps> = ({ formData, form, isSubmitting,reset}) =>
                 name: data.name, // The name of the newly added student
                 index: matchingClass.newIndex, // The new index for the student
                 year: data.year, // The year of the student
-                group: cls.group // The group of the class
+                group: cls.group,
+                cs:matchingClass.cs// The group of the class
               },
             ],
           };
