@@ -77,6 +77,7 @@ const t=useTranslations()
       highlightScanRegion: true,
       overlay: highlightCodeOutlineRef.current!,
       maxScansPerSecond:1,
+      preferredCamera:'user',
     });
     await qrScanner.current.start();
     setShowingQrScanner(true);
