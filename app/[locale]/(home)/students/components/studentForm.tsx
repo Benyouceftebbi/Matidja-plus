@@ -154,53 +154,54 @@ export default function StudentForm() {
     return selectedClass ? {id:selectedClass.id,index:selectedClass.students?selectedClass.students.length+1:1,group:selectedGroup.group}: {id:"",index:0,group:""};
   };
   const handleGroupChange = (index: number, field: 'name' | 'id' | 'subject' | 'time', value: string | number) => {
-    // Get current values from the form
     const classes = [...getValues('classes')];
-    const classesUids = getValues('classesUIDs') ? [...getValues('classesUIDs')] : [];
+    const classesUids=getValues('classesUIDs')?[...getValues('classesUIDs')]:[]
   
-    // Copy the class object at the specified index
-    const updatedClass = { ...classes[index] };
-  
-    // Update only the specific field
     if (field === 'subject') {
-      updatedClass.subject = value as string;
-      updatedClass.id = ''; // Clear id if necessary
-      updatedClass.name = ''; // Clear name if necessary
-      updatedClass.time = ''; // Clear time if necessary
+      const updatedClass = { id: '', name: '', subject: value, time: '', cs:classes[index].cs};
+      classes[index] = updatedClass;
+      setValue(`classes`, classes);
+      console.log(value);
     } else if (field === 'name') {
-      updatedClass.name = value as string;
-      updatedClass.id = ''; // Clear id if necessary
-      updatedClass.time = ''; // Clear time if necessary
+      const updatedClass = { id: '', name: value, subject: classes[index].subject, time: '', cs:classes[index].cs};
+      classes[index] = updatedClass;
+      setValue(`classes`, classes);
     } else if (field === 'time') {
-      const parsedString = JSON.parse(value as string);
+      const subject = classes[index].subject;
+      const name = classes[index].name;
+      const parsedString=JSON.parse(value)
       const [dayPart, timePart] = parsedString.split(',');
       const [start, end] = timePart.split('-');
   
       // Assuming getClassId is a synchronous function
-      const selectedClassId = getClassId(updatedClass.subject, updatedClass.name, dayPart, start, end);
-      
-      updatedClass.group = selectedClassId.group;
-      updatedClass.time = value as string;
-      updatedClass.start = start;
-      updatedClass.end = end;
-      updatedClass.day = dayPart;
-      updatedClass.id = selectedClassId.id;
-      updatedClass.index = selectedClassId.index;
+      const selectedClassId = getClassId(subject, name, dayPart, start, end);
   
-      // Update classUIDs as well
-      const updatedClassUIDs = { ...classesUids[index], id: selectedClassId.id, group: selectedClassId.group };
-      classesUids[index] = updatedClassUIDs;
+      const updatedClass = {
+        ...classes[index],
+        group: selectedClassId.group,
+        time: value,
+        start,
+        end,
+        day: dayPart,
+        id: selectedClassId.id,
+        index: selectedClassId.index,
+        cs:classes[index].cs
+        
+      };
+      const updatedClassUIDs = {
+        ...classesUids[index],
+        id:selectedClassId.id,
+        group:selectedClassId.group
+      };
+  
+      classes[index] = updatedClass;
+      classesUids[index]=updatedClassUIDs
+      setValue(`classes`, classes);
+      setValue(`classesUIDs`, classesUids);
     } else {
-      // Update other fields while preserving cs
-      updatedClass[field] = value;
+      classes[index][field] = value;
+      setValue(`classes.${index}`, classes[index]);
     }
-  
-    // Apply the updated class to the classes array
-    classes[index] = updatedClass;
-    setValue('classes', classes);
-  
-    // Update classesUIDs if necessary
-    setValue('classesUIDs', classesUids);
   };
   const videoRef = useRef<HTMLVideoElement>(null);
   const highlightCodeOutlineRef = useRef<HTMLDivElement>(null);

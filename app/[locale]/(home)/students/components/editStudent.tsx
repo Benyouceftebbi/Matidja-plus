@@ -612,7 +612,7 @@ const Footer: React.FC<FooterProps> = ({ formData, form, isSubmitting,reset,stud
       for (const cls of added) {
         const { group, id,  name,cs } = cls;
         const studentCount = await getStudentCount(id);
-        const index = studentCount + 1;
+        const index = studentCount ;
 
        setClasses(prevClasses => 
           prevClasses.map(cls =>

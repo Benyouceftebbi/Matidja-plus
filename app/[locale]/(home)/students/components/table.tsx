@@ -464,18 +464,7 @@ const orderedMonths = [
     </AlertDialogHeader>
     <AlertDialogFooter>
       <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
-      <AlertDialogAction className={buttonVariants({ variant: "destructive" })}  onClick={() =>{deleteStudent(student,classes), setStudents((prevStudents:any) =>
-      prevStudents.filter((std:any) => std.id !== student.id)
-
-    
-
-
-    )
-    toast({
-      title: "Student Deleted!",
-      description: `The student, ${student.name} Has been Deleted`,
-    });
-    }}> 
+      <AlertDialogAction className={buttonVariants({ variant: "destructive" })}  onClick={async () =>{await deleteStudent(student,classes);}}> 
         
         
         {t('Delete')}</AlertDialogAction>

@@ -49,7 +49,7 @@ export async function uploadAndLinkToCollection(
       }
   
       // Gather all necessary data before starting the transaction
-      const classUpdates: { classID: string, newIndex: number, group: string }[] = [];
+      const classUpdates: { classID: string, newIndex: number, group: string,cs:string }[] = [];
       
       for (const cls of student.classes) {
         const classRef = doc(db, 'Groups', cls.id);
@@ -62,7 +62,7 @@ export async function uploadAndLinkToCollection(
           const newIndex = highestIndex + 1;
   
           // Collect data for use in the transaction
-          classUpdates.push({ classID: cls.id, newIndex, group: cls.group });
+          classUpdates.push({ classID: cls.id, newIndex, group: cls.group ,cs:cls.cs});
         } else {
           console.log('No such document for class ID:', cls.id);
           // Handle missing class documents if necessary
@@ -79,7 +79,8 @@ export async function uploadAndLinkToCollection(
               name: student.name,
               index: update.newIndex,
               year: student.year,
-              group: update.group // Use group from the collected data
+              group: update.group ,
+              cs:update.cs// Use group from the collected data
             })
           });
         }
@@ -107,7 +108,7 @@ export const updateStudent = async(updatedstudent: any,studnetId:string)=>{
       throw error; // Optionally re-throw the error to propagate it further if needed
   }
 }
-export const deleteStudent = async ( student, classes) => {
+export const deleteStudent = async (student, classes) => {
   try {
     // Create an array of promises for each class update
     const updatePromises = student.classesUIDs.map(async (cls) => {
@@ -143,7 +144,11 @@ export const deleteStudent = async ( student, classes) => {
     // Wait for all update operations to complete
     await Promise.all(updatePromises);
 
-    console.log('Student removed from all classes successfully');
+    // Delete the student from the Students collection
+    const studentDocRef = doc(db, 'Students', student.id);
+    await deleteDoc(studentDocRef);
+
+    console.log('Student removed from all classes and deleted from Students collection successfully');
   } catch (error) {
     console.error('Error deleting student:', error);
   }
@@ -197,7 +202,7 @@ export const formatDateToYYYYMMDD = (date: Date): string => {
     const { id, group,index,name,year,cs } = student;
   
     const studentDocRef = doc(db, 'Students', studentId);  
-  console.log("dqwdqdwqwdqwd",id, group,index,name,year,cs);
+  console.log("dqwdqdwqwdqwd", group, studentId, index, name, year,cs );
   
       await updateDoc(studentDocRef, {
         classesUIDs: arrayRemove({ id, group })
@@ -205,9 +210,9 @@ export const formatDateToYYYYMMDD = (date: Date): string => {
   
       const classDocRef = doc(db, 'Groups', id);
       await updateDoc(classDocRef, {
-        students: arrayRemove({ group, studentId, index, name, year,cs })
+        students: arrayRemove({ group, id:studentId, index, name, year,cs })
       });
-    }
+     }
     
      export  async function changeStudentGroup(classId,studentId,students,classesUIDs) {
     
@@ -250,13 +255,22 @@ export async function markAttendance(classId,attendanceId,student){
         }
   
         const classData = classDoc.data();
-        const highestIndex = classData.students.reduce((max, student) => Math.max(max, student.index || 0), 0);
-        const currentStudentCount = highestIndex + 1
+        const students = classData.students;
+        let highestIndex = 0;
+        
+        for (const student of students) {
+          if (typeof student.index === 'number') {
+            highestIndex = Math.max(highestIndex, student.index);
+          }
+        }
+        console.log("highest",highestIndex);
+        
+        const currentStudentCount = highestIndex + 1;
   
         return currentStudentCount;
       });
   
-      return newStudentIndex + 1; // Adding 1 to get the new index
+      return newStudentIndex; // Adding 1 to get the new index
     } catch (error) {
       console.error('Error fetching student count:', error);
       throw error;
