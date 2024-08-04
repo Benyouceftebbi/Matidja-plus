@@ -64,8 +64,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { useTranslations } from 'next-intl';
 import { addStudent } from '@/lib/hooks/students';
-import { collection, getCountFromServer } from 'firebase/firestore';
-import { db } from '@/firebase/firebase-config';
+import { ScrollArea } from '@/components/ui/scroll-area';
 interface FooterProps {
   formData: Student;
   form: UseFormReturn<any>; // Use the specific form type if available
@@ -527,6 +526,7 @@ export default function StudentForm() {
 </div>
 ) : (
   <div className="w-full h-full">
+     <ScrollArea className="h-[400px]">
     <Table>
       <TableCaption>        <Button type='button' size="sm" variant="ghost" className="gap-1 w-full"  onClick={()=>appendClass({id:'',name:'',subject:'',time:'',cs:'false'})}>
                       <PlusCircle className="h-3.5 w-3.5" />
@@ -623,7 +623,7 @@ export default function StudentForm() {
         ))}
       </TableBody>
     </Table>
-
+    </ScrollArea>
 </div>
 )}
               </div>

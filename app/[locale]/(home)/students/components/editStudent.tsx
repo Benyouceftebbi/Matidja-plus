@@ -56,7 +56,7 @@ import html2canvas from 'html2canvas';
 import { UseFormReturn } from 'react-hook-form';
 import { useData } from '@/context/admin/fetchDataContext';
 import { useTranslations } from 'next-intl';
-
+import { ScrollArea } from '@/components/ui/scroll-area';
 interface FooterProps {
   formData: Student;
   student: Student;
@@ -401,6 +401,7 @@ const EditStudent: React.FC<openModelProps> = ({ setOpen, open,student }) => {
 </div>
 ) : (
   <div className="w-full h-full">
+       <ScrollArea className="h-[400px]">
     <Table>
       <TableCaption>        <Button type='button' size="sm" variant="ghost" className="gap-1 w-full"  onClick={()=>appendClass({id:'',name:'',subject:'',time:''})}>
                       <PlusCircle className="h-3.5 w-3.5" />
@@ -497,7 +498,7 @@ const EditStudent: React.FC<openModelProps> = ({ setOpen, open,student }) => {
         ))}
       </TableBody>
     </Table>
-
+    </ScrollArea>
 </div>
 )}
               </div>
