@@ -240,7 +240,7 @@ interface DataTableDemoProps {
                   {t('edit')} </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => openCardSheet(student)}>
                  {t('New Card')} </DropdownMenuItem>
-                <DropdownMenuItem onClick={() =>setOpenAlert(true)}>
+                 <DropdownMenuItem onClick={() =>{setOpenAlert(true);setStudent(student)}}>
           {t('delete')} </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -464,7 +464,18 @@ const orderedMonths = [
     </AlertDialogHeader>
     <AlertDialogFooter>
       <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
-      <AlertDialogAction className={buttonVariants({ variant: "destructive" })}  onClick={async () =>{await deleteStudent(student,classes);}}> 
+      <AlertDialogAction className={buttonVariants({ variant: "destructive" })}  onClick={async() =>{await deleteStudent(student,classes); setStudents((prevStudents:any) =>
+      prevStudents.filter((std:any) => std.id !== student.id)
+
+    
+
+
+    )
+    toast({
+      title: "Student Deleted!",
+      description: `The student, ${student.name} Has been Deleted`,
+    });
+    }}> 
         
         
         {t('Delete')}</AlertDialogAction>
