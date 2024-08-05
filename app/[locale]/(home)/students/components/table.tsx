@@ -533,4 +533,5 @@ function QrCodeIcon(props) {
       <path d="M12 21v-1" />
     </svg>
   );
+  
 }
