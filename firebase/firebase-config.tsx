@@ -3,20 +3,20 @@ import { initializeApp } from "firebase/app";
 import { initializeAuth,browserLocalPersistence } from "firebase/auth";
 import {getFirestore} from 'firebase/firestore'
 import { getStorage } from "firebase/storage";
-import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
+import {getFunctions } from 'firebase/functions';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyDq7u5DHQX6Pi2JRWoqQi9aXRSmxRBxtR4",
-  authDomain: "metidja-plus-f684b.firebaseapp.com",
-  projectId: "metidja-plus-f684b",
-  storageBucket: "metidja-plus-f684b.appspot.com",
-  messagingSenderId: "208923814622",
-  appId: "1:208923814622:web:d66f403bc72db29009704f",
-  measurementId: "G-77DC2VHF8X"
+  apiKey: "AIzaSyCqgP7Ux8aE3gBPYodlmdEa6ySdhyUZnE8",
+  authDomain: "test-swi3a.firebaseapp.com",
+  projectId: "test-swi3a",
+  storageBucket: "test-swi3a.appspot.com",
+  messagingSenderId: "962261822843",
+  appId: "1:962261822843:web:da61beeed8a9a41ce961de",
+  measurementId: "G-K2EX9SF3ZM"
 };
 
 
