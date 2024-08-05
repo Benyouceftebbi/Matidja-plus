@@ -44,13 +44,13 @@ export const ArchiveDataTable = ({teacher}) => {
   const [filter,setFilter]=useState(teacher.year[0])
   const transformData = useCallback((data: any) => {
     if (data) {
-      const { id, attendance, students } = data;
+      const { id, Attendance, students } = data;
   
       // Create a map to store the attendance statuses by name, ID, and date
       const attendanceMap: { [key: string]: { [key: string]: string; index?: number; group?: string } } = {};
   
       // Initialize the map with all dates
-      for (const [date, { attendanceList }] of Object.entries(attendance)) {
+      for (const [date, { attendanceList }] of Object.entries(Attendance)) {
         // Create a set of student IDs for fast lookup
         const studentIdsSet = new Set(students.map((student: any) => student.id));
   
@@ -106,7 +106,7 @@ export const ArchiveDataTable = ({teacher}) => {
 
 
 
-   const dates = datesKeys?Object.keys(datesKeys.attendance):null;
+   const dates = datesKeys?Object.keys(datesKeys.Attendance):null;
 
     const baseColumns: ColumnDef<any>[] = [
   {
