@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-
 import {
   Dialog,
   DialogClose,
@@ -13,7 +12,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { CircleAlertIcon, CircleCheckIcon, PlusCircle } from 'lucide-react';
 import QrScanner from "qr-scanner";
-
 import { useTranslations } from 'next-intl';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/firebase/firebase-config';
@@ -37,6 +35,7 @@ const QrSeach: React.FC<{ onStudentScanned: (name: string) => void }> = ({ onStu
   const audioRefSuccess = useRef(null);
   const audioRefError = useRef(null);
   const processedQrCodes = useRef(new Set<string>());
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleQrScan = async (result) => {
     if (!isFirestoreId(result.data)) {
@@ -50,25 +49,32 @@ const QrSeach: React.FC<{ onStudentScanned: (name: string) => void }> = ({ onStu
     if (userDoc.exists()) {
       const userData = userDoc.data();
       setStudent(userData);
-      onStudentScanned(userData.name); // Call the prop function with the student name
+      onStudentScanned(userData.name || ''); // Send student name or empty string if name not found
       audioRefSuccess.current?.play();
     } else {
       setStudent(null);
+      onStudentScanned(''); // Send empty string if student not found
+      alert('Student not found'); // Display alert if student not found
       audioRefError.current?.play();
     }
     stopScanner();
+    setIsDialogOpen(false); // Close the dialog
   };
 
   const stopScanner = () => {
     qrScanner.current?.stop();
     qrScanner.current = null;
-    videoRef.current!.hidden = true;
+    if (videoRef.current) {
+      videoRef.current.hidden = true;
+    }
     processedQrCodes.current.clear();
     setShowingQrScanner(false);
   };
 
   const handleButtonClick = async () => {
-    videoRef.current!.hidden = false;
+    if (videoRef.current) {
+      videoRef.current.hidden = false;
+    }
     qrScanner.current = new QrScanner(videoRef.current!, handleQrScan, {
       highlightScanRegion: true,
       overlay: highlightCodeOutlineRef.current!,
@@ -77,10 +83,11 @@ const QrSeach: React.FC<{ onStudentScanned: (name: string) => void }> = ({ onStu
     });
     await qrScanner.current.start();
     setShowingQrScanner(true);
+    setIsDialogOpen(true); // Open the dialog
   };
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild className='mr-3'>
         <Button variant="outline" className="ml-2">
           <QrCodeIcon />
@@ -112,45 +119,7 @@ const QrSeach: React.FC<{ onStudentScanned: (name: string) => void }> = ({ onStu
               {t('Start QR Scanner')}
             </button>
           )}
-          {student && (
-            <div className="flex items-center justify-center">
-              <div className="rounded-md bg-green-50 p-6 w-full max-w-md">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <CircleCheckIcon className="h-7 w-7 text-green-400" />
-                  </div>
-                  <div className="ml-4">
-                    <h3 className="text-lg font-medium text-green-800">{`Student Found: ${student.name}`}</h3>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-          {student === undefined && (
-            <div className="grid gap-4"></div>
-          )}
-          {student === null && (
-            <div className="flex items-center justify-center">
-              <div className="rounded-md bg-red-50 p-6 w-full max-w-md">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <CircleAlertIcon className="h-7 w-7 text-red-400" />
-                  </div>
-                  <div className="ml-4">
-                    <h3 className="text-lg font-medium text-red-800">{`Student Not Found`}</h3>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
-        <DialogFooter className="">
-          <DialogClose asChild>
-            <Button type="button" onClick={() => { stopScanner(); setStudent(undefined); }}>
-              Close
-            </Button>
-          </DialogClose>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
