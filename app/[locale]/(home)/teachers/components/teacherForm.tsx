@@ -192,7 +192,6 @@ const checkRoomAvailability = useCallback((newGroup: Group, allRooms: string[]):
 
 
 const subjects = [
-  "Select Option",
   "رياضيات",
   "علوم",
   "فيزياء",

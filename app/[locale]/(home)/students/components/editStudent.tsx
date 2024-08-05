@@ -73,8 +73,6 @@ interface openModelProps {
 }
 const subjects =['متوسط','علوم تجريبية', 'تقني رياضي', 'رياضيات', 'تسيير واقتصاد ', 'لغات اجنبية ', 'اداب وفلسفة']
 const classess = [
-  "Select Option",
-   "Select Option",
    "رياضيات",
    "علوم",
    "فيزياء",

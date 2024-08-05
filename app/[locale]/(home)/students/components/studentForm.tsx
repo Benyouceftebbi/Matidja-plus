@@ -74,7 +74,6 @@ interface FooterProps {
 
 const subjects =['متوسط','علوم تجريبية', 'تقني رياضي', 'رياضيات', 'تسيير واقتصاد ', 'لغات اجنبية ', 'اداب وفلسفة']
 const classess = [
- "Select Option",
   "رياضيات",
   "علوم",
   "فيزياء",
