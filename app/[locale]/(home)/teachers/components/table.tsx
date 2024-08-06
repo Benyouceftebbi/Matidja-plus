@@ -191,8 +191,8 @@ interface DataTableDemoProps {
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => openEditSheet(teacherss)}>
                   {t('edit')} </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => openAttendanceCard(teacherss)}>
-                  {t('details')} </DropdownMenuItem>
+                  {/* <DropdownMenuItem onClick={() => openAttendanceCard(teacherss)}>
+                  {t('details')} </DropdownMenuItem> */}
 
 
                   <DropdownMenuItem onClick={() =>{setOpenAlert(true);setTeacher(teacherss)}}>
