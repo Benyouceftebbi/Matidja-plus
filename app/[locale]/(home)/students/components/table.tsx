@@ -70,6 +70,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import VerifyStudent from "./VerifyStudent"
+import QrSeach from "./Qr-search"
 type Status = 'accepted' | 'pending' | 'rejected';
 export type StudentSummary = {
   id: string;
@@ -348,15 +349,18 @@ const orderedMonths = [
       
       <div className="flex items-center justify-between">
        
-    
-    <Input
+  
+      <Input
           placeholder={t('filter-student')}
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm mt-4"
+          className="max-w-sm font-medium"
         />
+              <QrSeach onStudentScanned={(name) => {
+        table.getColumn("name")?.setFilterValue(name);
+      }} />
           <div className=" ml-auto space-y-4 ">
             <StudentForm/>
             <VerifyStudent/>
