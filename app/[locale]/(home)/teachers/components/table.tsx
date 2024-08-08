@@ -267,7 +267,7 @@ const orderedMonths = [
     initialState: {
       pagination: {
         pageIndex: 0, //custom initial page index
-        pageSize: 10, //custom default page size
+        pageSize: 50, //custom default page size
       },
     },
   })

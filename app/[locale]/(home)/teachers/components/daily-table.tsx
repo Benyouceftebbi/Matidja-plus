@@ -180,11 +180,11 @@ const t=useTranslations()
                 <TabsTrigger   value={"All"} onClick={() =>    table.resetColumnFilters()}>
                       Tout
                     </TabsTrigger>
-                    {teacher.classes.map((group,index) => (
+                    {teacher.classes!= null &&(teacher.classes.map((group,index) => (
                     <TabsTrigger key={index} value={index} onClick={() =>    table.getColumn("group")?.setFilterValue(group.group)}>
                      {t(`${group.day}`)},{group.start}-{group.end}
                     </TabsTrigger>
-                  ))}
+                  )))}
                 </TabsList>
               </div>
               {/*  */}
