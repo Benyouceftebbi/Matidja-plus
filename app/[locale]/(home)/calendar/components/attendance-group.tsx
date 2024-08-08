@@ -30,7 +30,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button, buttonVariants } from "@/components/ui/button"
-import { removeStudentFromAttendance } from "@/lib/hooks/Calendar";
+import { removeStudentFromAttendance } from "@/lib/hooks/calendar";
 import React from "react";
 
 
