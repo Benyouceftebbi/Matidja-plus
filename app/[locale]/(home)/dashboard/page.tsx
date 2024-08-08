@@ -40,7 +40,7 @@ import {
 } from "@/components/ui/popover"
 import { pdf } from "@react-pdf/renderer";
 import StudentInvoice from'../students/components/studentInvoice'
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { db } from "@/firebase/firebase-config";
 import { AutoComplete } from "@/components/ui/autocomplete";
  
@@ -225,116 +225,118 @@ export default function Home() {
   };
   const onConfirm = async () => {
     try {
-      // Find the index of the class to update
-      const classIndex = classes.findIndex(cls => cls.id === currentClass.id);
-      if (classIndex === -1) {
-        console.error('Class not found');
-        return;
-      }
+      const updatedClasses = [...classes]; // Create a copy of the current classes
   
-      const clsid = classes[classIndex].id;
-  
-      // Get the current date and format it for UID
-      const currentDate = new Date();
-      const year = currentDate.getFullYear();
-      const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-      const day = String(currentDate.getDate()).padStart(2, '0');
-      const dateTimeUID = `${year}-${month}-${day}-${currentClass.studentGroup}`;
-  
-      // Create a copy of the previous classes
-      const updatedClasses = [...classes];
-  
-      // Get the current attendance list for the given class
-      const currentAttendanceList = updatedClasses[classIndex]?.Attendance?.[dateTimeUID] || {
-        start: '',
-        end: '',
-        attendanceList: [],
-        group: currentClass.studentGroup,
-        id: dateTimeUID
-      };
- 
-      const studentExists = currentAttendanceList.attendanceList.some(
-        attendance => attendance.index === currentClass.studentIndex
-      );
-  
-      if (studentExists) {
-           setAlertText("This student has already scanned their code in the past hour.");
-      setOpenAlert(true);
-        return;
-      }
-      // Check if attendance already exists
-      const exists = updatedClasses[classIndex]?.Attendance?.[dateTimeUID] !== undefined;
-      console.log("exsist",updatedClasses[classIndex]?.Attendance?.[dateTimeUID] !== undefined);
-      
-      // Update the attendance list
-      currentAttendanceList.attendanceList.push({
-        index: currentClass.studentIndex,
-        group: currentClass.studentGroup,
-        name: studentData?.name,
-        status: 'present'
-      });
-  
-      // Update the class with the new attendance list
-      updatedClasses[classIndex] = {
-        ...updatedClasses[classIndex],
-        Attendance: {
-          ...updatedClasses[classIndex].Attendance,
-          [dateTimeUID]: currentAttendanceList
+      // Iterate over each selected class and group
+      for (const [subject, selectedClass] of Object.entries(selectedClasses)) {
+        // Find the index of the class to update
+        const classIndex = updatedClasses.findIndex(cls => cls.id === selectedClass.id);
+        if (classIndex === -1) {
+          console.error(`Class not found for subject: ${subject}`);
+          continue;
         }
-      };
   
-      // Set the updated classes
-      setClasses(updatedClasses);
- 
-      
-      //Perform the appropriate Firebase operation based on existence
-      if (exists) {
-        console.log("hello",dateTimeUID);
-        
-        await markAttendance(clsid, dateTimeUID, {
-          name: studentData?.name,
-          group: currentClass.group,
-          index: currentClass.studentIndex,
-          status: 'present',
-          id:studentData?.id
-        });
-
-      } else {
-        console.log("helloeqweqwe",dateTimeUID);
-        const date=parseDateTimeRange(`${year}-${month}-${day}-${currentClass.start}-${currentClass.end}`)
-        await setDoc(
-          doc(db, 'Groups', clsid, 'Attendance', dateTimeUID),
-          {
-            group: currentClass.studentGroup,
-            end: date.endDateTime,
-            id: dateTimeUID,
-            start: date.startDateTime,
-            attendanceList: [{
-              name: studentData?.name,
-              group: currentClass.group,
-              index: currentClass.studentIndex,
-              status: 'present',
-              id:studentData?.id
-            }]
-          },
-          { merge: true } // Merge option to combine new data with existing data
+        const clsid = updatedClasses[classIndex].id;
+  
+        // Get the current date and format it for UID
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const dateTimeUID = `${year}-${month}-${day}-${selectedClass.group}`; // Use the selected class group
+  
+        // Get the current attendance list for the given class
+        const currentAttendanceList = updatedClasses[classIndex]?.Attendance?.[dateTimeUID] || {
+          start: '',
+          end: '',
+          attendanceList: [],
+          group: selectedClass.group, // Use the selected class group
+          id: dateTimeUID
+        };
+  
+        // Check if the student already exists in the attendance list
+        const studentExists = currentAttendanceList.attendanceList.some(
+          attendance => attendance.index === selectedClass.studentIndex
         );
-
+  
+        if (studentExists) {
+          setAlertText("This student has already scanned their code in the past hour.");
+          setOpenAlert(true);
+          continue;
+        }
+  
+        // Update the attendance list
+        currentAttendanceList.attendanceList.push({
+          index: selectedClass.studentIndex,
+          group: selectedClass.group, // Use the selected class group
+          name: studentData?.name,
+          status: 'present'
+        });
+  
+        // Update the class with the new attendance list
+        updatedClasses[classIndex] = {
+          ...updatedClasses[classIndex],
+          Attendance: {
+            ...updatedClasses[classIndex].Attendance,
+            [dateTimeUID]: currentAttendanceList
+          }
+        };
+  
+        // Perform the appropriate Firebase operation based on existence
+        const attendanceDocRef = doc(db, 'Groups', clsid, 'Attendance', dateTimeUID);
+        const docSnapshot = await getDoc(attendanceDocRef);
+  
+        if (docSnapshot.exists()) {
+          // If the document exists, update it
+          await updateDoc(attendanceDocRef, {
+            attendanceList: arrayUnion({
+              name: studentData?.name,
+              group: selectedClass.group, // Use the selected class group
+              index: selectedClass.studentIndex,
+              status: 'present',
+              id: studentData?.id
+            })
+          });
+        } else {
+          // If the document doesn't exist, create it
+          const date = parseDateTimeRange(`${year}-${month}-${day}-${selectedClass.start}-${selectedClass.end}`);
+          await setDoc(
+            attendanceDocRef,
+            {
+              group: selectedClass.group, // Use the selected class group
+              end: date.endDateTime,
+              id: dateTimeUID,
+              start: date.startDateTime,
+              attendanceList: [{
+                name: studentData?.name,
+                group: selectedClass.group, // Use the selected class group
+                index: selectedClass.studentIndex,
+                status: 'present',
+                id: studentData?.id
+              }]
+            }
+          );
+        }
+  
+        // Optionally generate a bill if needed
+        generateBillIfNeeded({ name: studentData?.name, subject: selectedClass.subject, year: selectedClass.year });
       }
-      
+  
       // Play success audio
       audioRefSuccess.current?.play();
-      generateBillIfNeeded({name:studentData?.name,subject:currentClass.subject,year:currentClass.year})
+  
       // Clear state
       setCurrentClass(undefined);
       setCurrentClasses(undefined);
       setStudentData(null);
     } catch (error) {
       console.error('Error updating attendance:', error);
-      // Optionally, show an alert or user-friendly message
       alert('An error occurred while updating attendance. Please try again.');
     }
   };
+  
+  
+  
   const handleButtonClick = async () => {
     videoRef.current!.hidden = false;
     qrScanner.current = new QrScanner(videoRef.current!, handleQrScan, {
@@ -345,7 +347,16 @@ export default function Home() {
     await qrScanner.current.start();
     setShowingQrScanner(true);
   };
+  const [selectedClasses, setSelectedClasses] = useState({});
 
+  const handleSelection = (classObj, group) => {
+    setSelectedClasses((prev) => ({
+      ...prev,
+      [classObj.subject]: { ...classObj, group }, // store the selected class and group by subject
+    }));
+  };
+  console.log('currentClasses ',currentClasses);
+  console.log('selectedClasses ',selectedClasses);
   
   return (
     <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto p-4 md:p-8">
@@ -438,8 +449,8 @@ export default function Home() {
       <span>{studentData.cs}</span>
     </div>
   </div>
-  {/* <Separator />
-  <div className="grid gap-2">
+   <Separator />
+  {/*<div className="grid gap-2">
     <span className="text-muted-foreground">Classes:</span>
     {studentData.classes.map((subject) => (
       <div key={subject.id} className="flex flex-col">
@@ -449,32 +460,53 @@ export default function Home() {
         <span>CS:{subject.cs}</span>
       </div>
     ))}
-  </div> */}
+    </div> */}
   <Separator />
   <div className="grid gap-2">
-  <span className="text-muted-foreground"> {t('avaliable-classes')}:</span>
+  <span className="text-muted-foreground">{t('avaliable-classes')}:</span>
   {Array.isArray(currentClasses) && currentClasses.length > 0 && (
-  <RadioGroup defaultValue="card" className="grid grid-cols-3 gap-4">
-    {currentClasses.map((classObj,index) => (
-      <div key={index}>
-        <RadioGroupItem value={classObj.id} onClick={()=>setCurrentClass(classObj)
-        } id={classObj.id} className="peer sr-only" />
-        <Label
-          htmlFor={classObj.id}
-          className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-        >
-          <span className="font-semibold">{classObj.subject}</span>
-          <span>{classObj.name}</span>
-          <span>{classObj.day},{classObj.start}-{classObj.end}</span>
-        </Label>
-      </div>
-    ))}
-  </RadioGroup>
-)}
+    <RadioGroup className="grid grid-cols-3 gap-4">
+      {currentClasses.map((classObj, index) => (
+        <div key={index}>
+          {classObj.group.split(',').map((group) => (
+            <div key={`${classObj.id}-${group}`}>
+              <RadioGroupItem
+                value={`${classObj.id}-${group}`}
+                onClick={() => handleSelection(classObj, group)}
+                id={`${classObj.id}-${group}`}
+                className="peer sr-only"
+                checked={
+                  selectedClasses[classObj.subject]?.id === classObj.id &&
+                  selectedClasses[classObj.subject]?.group === group
+                } // check if the current group is selected for this class
+              />
+              <Label
+                htmlFor={`${classObj.id}-${group}`}
+                className={`flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary 
+                ${
+                  selectedClasses[classObj.subject]?.id === classObj.id &&
+                  selectedClasses[classObj.subject]?.group === group
+                    ? 'border-primary'
+                    : ''
+                }`}
+              >
+                <span className="font-semibold">{classObj.subject}</span>
+                <span>{classObj.name}</span>
+                <span>{`Group: ${group}`}</span>
+                <span>{classObj.day}, {classObj.start} - {classObj.end}</span>
+              </Label>
+            </div>
+          ))}
+        </div>
+      ))}
+    </RadioGroup>
+  )}
 </div>
-{currentClass ?(  <div className="mt-4 flex justify-end">
+
+{Object.keys(selectedClasses).length > 0 ? (
+  <div className="mt-4 flex justify-end">
     <Button
-      onClick={() => {setStudentData(null);setCurrentClass(undefined);setCurrentClasses(undefined)}}
+      onClick={() => { setStudentData(null); setCurrentClass(undefined); setCurrentClasses(undefined); }}
       variant='outline'
     >
       {t('reset')}
@@ -485,17 +517,18 @@ export default function Home() {
     >
       {t('confirm')}
     </Button>
-  </div>):(
-     <div className="mt-4 flex justify-end">
-     <Button
-       onClick={() => {setStudentData(null);setCurrentClass(undefined);setCurrentClasses(undefined)}}
-       variant='outline'
-     >
-        {t('reset')}
-     </Button>
+  </div>
+) : (
+  <div className="mt-4 flex justify-end">
+    <Button
+      onClick={() => { setStudentData(null); setCurrentClass(undefined); setCurrentClasses(undefined); }}
+      variant='outline'
+    >
+      {t('reset')}
+    </Button>
+  </div>
+)}
 
-   </div>
-  )}
 </div>) :(<div className="bg-muted rounded-lg p-6 flex flex-col gap-4">
   <AutoComplete
         options={students}
